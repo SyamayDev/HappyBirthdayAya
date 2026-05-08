@@ -262,227 +262,144 @@ $color-heart: #ff1493;
   }
 }
 
-/* === MODAL ELECTRIC PINK (sudah 100% sesuai contoh yang kamu kasih) === */
-:root {
-  --electric-border-color: #ff69b4;
-  --electric-light-color: oklch(from var(--electric-border-color) 1 c h);
-  --gradient-color: oklch(
-    from var(--electric-border-color) 0.2 calc(c / 2) h / 0.9
-  );
-  --color-neutral-900: oklch(0.185 0 0);
-}
-
+/* === MODAL SIMPLE & CUTE === */
 .modal {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.655);
   justify-content: center;
   align-items: center;
   z-index: 1000;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(3px);
+  padding: 20px;
 }
+
 .modal.show {
   display: flex;
   opacity: 1;
 }
-.svg-container {
-  position: absolute;
-}
 
 .card-container {
-  padding: 2px;
-  border-radius: 24px;
   position: relative;
-  background:
-    linear-gradient(
-      -30deg,
-      var(--gradient-color),
-      transparent,
-      var(--gradient-color)
-    ),
-    linear-gradient(
-      to bottom,
-      var(--color-neutral-900),
-      var(--color-neutral-900)
-    );
+  width: 100%;
+  max-width: 380px;
+  animation: slideUp 0.4s ease-out;
 }
+
 .inner-container {
   position: relative;
 }
-.border-outer {
-  border: 2px solid rgba(255, 105, 180, 0.5);
-  border-radius: 24px;
-  padding-right: 4px;
-  padding-bottom: 4px;
-}
+
 .main-card {
-  width: 350px;
-  height: 500px;
-  border-radius: 24px;
-  border: 2px solid var(--electric-border-color);
-  margin-top: -4px;
-  margin-left: -4px;
-  filter: url(#turbulent-displace);
+  width: 100% !important;
+  aspect-ratio: 350/500 !important;
+  max-width: 380px !important;
+  border-radius: 20px !important;
+  border: 2px solid #ff69b4 !important;
+  background: linear-gradient(
+    135deg,
+    #fff0f7 0%,
+    #ffeef6 50%,
+    #fff8fb 100%
+  ) !important;
+  box-shadow:
+    0 20px 50px rgba(255, 105, 180, 0.25),
+    0 0 0 1px rgba(255, 105, 180, 0.1) !important;
+  padding: 32px 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  color: #6b2750 !important;
 }
-.glow-layer-1 {
-  border: 2px solid rgba(255, 105, 180, 0.6);
-  border-radius: 24px;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  filter: blur(1px);
-}
-.glow-layer-2 {
-  border: 2px solid var(--electric-light-color);
-  border-radius: 24px;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  filter: blur(4px);
-}
+
+.border-outer,
+.glow-layer-1,
+.glow-layer-2,
 .overlay-1,
-.overlay-2 {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border-radius: 24px;
-  mix-blend-mode: overlay;
-  transform: scale(1.1);
-  filter: blur(16px);
-  background: linear-gradient(
-    -30deg,
-    white,
-    transparent 30%,
-    transparent 70%,
-    white
-  );
-}
-.overlay-1 {
-  opacity: 1;
-}
-.overlay-2 {
-  opacity: 0.5;
-}
-.background-glow {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border-radius: 24px;
-  filter: blur(32px);
-  transform: scale(1.1);
-  opacity: 0.3;
-  z-index: -1;
-  background: linear-gradient(
-    -30deg,
-    var(--electric-light-color),
-    transparent,
-    var(--electric-border-color)
-  );
+.overlay-2,
+.background-glow,
+.scrollbar-glass,
+.svg-container {
+  display: none !important;
 }
 
 .content-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
+  position: relative !important;
+  inset: auto !important;
   flex-direction: column;
-  color: white;
+  color: #6b2750 !important;
 }
+
 .content-top {
-  display: flex;
-  flex-direction: column;
-  padding: 48px;
-  padding-bottom: 16px;
-  height: 100%;
+  padding: 0 !important;
+  height: auto !important;
+  text-align: center;
+  margin-bottom: 16px;
 }
+
 .content-bottom {
-  display: flex;
-  flex-direction: column;
-  padding: 48px;
-  padding-top: 16px;
+  padding: 0 !important;
+  text-align: center;
 }
-.scrollbar-glass {
-  background:
-    radial-gradient(
-      47.2% 50% at 50.39% 88.37%,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0) 100%
-    ),
-    rgba(255, 255, 255, 0.04);
-  position: relative;
-  transition: background 0.3s ease;
-  border-radius: 14px;
-  padding: 8px 16px;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
-}
-.scrollbar-glass:hover {
-  background:
-    radial-gradient(
-      47.2% 50% at 50.39% 88.37%,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0) 100%
-    ),
-    rgba(255, 255, 255, 0.08);
-}
+
 .title {
-  font-size: 36px;
-  font-weight: 500;
-  margin-top: auto;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ff50aa;
+  margin: 0 0 12px 0;
+  font-family: "Amatic SC", cursive;
 }
+
 .description {
-  opacity: 0.8;
-  font-size: 18px;
-  line-height: 1.5;
+  opacity: 1;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #ffffff;
+  margin: 0;
 }
+
 .divider {
-  margin-top: auto;
-  border: none;
-  height: 1px;
-  background-color: currentColor;
-  opacity: 0.1;
-  mask-image: linear-gradient(to right, transparent, black, transparent);
+  display: none !important;
 }
+
 .modal-button {
-  margin-top: 20px;
-  padding: 12px 24px;
-  background-color: #ff69b4;
+  margin-top: 16px;
+  padding: 12px 28px;
+  background: linear-gradient(90deg, #ff69b4, #ff9fc8);
   color: white;
   border: none;
   border-radius: 8px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  animation: pulse 2s infinite;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.3);
+  animation: none;
 }
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-}
+
 .modal-button:hover {
-  background-color: #d13f8a;
+  background: linear-gradient(90deg, #ff1493, #ff69b4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 105, 180, 0.4);
+}
+
+.modal-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 105, 180, 0.2);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* a hack to avoid all the ui elements from the puzzle script */
