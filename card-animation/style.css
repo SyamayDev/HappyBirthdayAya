@@ -1,0 +1,231 @@
+@import url("https://fonts.googleapis.com/css?family=Indie+Flower");
+@import url("https://fonts.googleapis.com/css?family=Amatic+SC");
+
+/* ====== Relevant CSS ====== */
+.scene,
+.a3d {
+  display: grid;
+}
+
+.scene {
+  /* prevent scrollbars */
+  overflow: hidden;
+  width: 100%;
+  max-width: 960px;
+  height: 55vh;
+  place-items: center;
+  /* for 3D look; smaller = more extreme effect */
+  perspective: 35em;
+  mask: /* lateral fade */ linear-gradient(90deg, #0000, red 20% 80%, #0000);
+  transition: transform 0.8s ease;
+}
+
+.a3d {
+  place-self: center /* middle align */;
+  /* don't flatten 3D transformed children 
+	 * of this parent having its own 3D transform */
+  transform-style: preserve-3d;
+  animation: ry 32s linear infinite;
+}
+/* simplest y axis rotation */
+@keyframes ry {
+  to {
+    rotate: y 1turn;
+  }
+}
+
+.card {
+  /* base card width, you may change this */
+  --w: 17.5em;
+  /* compute base angle corresponding to a card */
+  --ba: 1turn / var(--n); /* in the future: sibling-count() */
+  grid-area: 1/ 1 /* stack in same one grid cell */;
+  width: var(--w);
+  aspect-ratio: 7/ 10;
+  object-fit: cover;
+  border-radius: 1.5em;
+  /* don't want to see back of cards in front of screen plane */
+  backface-visibility: hidden;
+  /* need to use a transform chain here, cannot use separate 
+	 * rotate & translate properties because they'd be applied 
+	 * in wrong order (translate, then rotate) for what we need */
+  transform: 
+		/* rotate around y axis; in the future: sibling-index() */ rotatey(
+      calc(var(--i) * var(--ba))
+    )
+    /* only after that translate along z axis with minus */
+    translatez(calc(-1 * (0.5 * var(--w) + 0.5em) / tan(0.5 * var(--ba))));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .a3d {
+    animation-duration: 128s;
+  }
+}
+
+/* ====== General page prettifying and layout ====== */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  background: #fff3ed;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: #222;
+}
+
+.app {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.book-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.book {
+  color: #013243; /* SHERPA BLUE */
+  position: relative;
+  width: 300px;
+  height: 400px;
+  background: #e0e1dc;
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+  box-shadow:
+    inset 300px 0 50px rgba(0, 0, 0, 0.5),
+    20px 0 60px rgba(0, 0, 0, 0.5);
+  transition:
+    transform 0.8s ease,
+    box-shadow 0.8s ease;
+  cursor: pointer;
+}
+
+.book:before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: #bac1ba;
+  transform-origin: bottom;
+  transform: skewX(-45deg);
+}
+
+.book:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -5px;
+  width: 5px;
+  height: 100%;
+  background: #92a29c;
+  transform-origin: left;
+  transform: skewY(-45deg);
+}
+
+.book .imgBox {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-origin: left;
+  transition: 0.7s;
+}
+
+.book .bark {
+  position: absolute;
+  background: #e0e1dc;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: 0.7s;
+}
+
+.book .imgBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book.open .imgBox {
+  transform: rotateY(-135deg);
+}
+
+.book.open .bark {
+  opacity: 1;
+  transition: 0.6s;
+  box-shadow: 300px 200px 100px rgba(0, 0, 0, 0.4) inset;
+}
+
+.book .details {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  padding: 0 0 0 10px;
+  z-index: -1;
+  margin-top: 70px;
+}
+
+.book .details p {
+  font-size: 15px;
+  line-height: 1.2;
+  transform: rotate(-10deg);
+  padding: 0 0 0 20px;
+}
+
+.book .details h4 {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.book h4 {
+  font-size: 26px;
+  line-height: 1;
+  font-family: "Amatic SC", cursive;
+  margin: 0.25rem 0;
+}
+
+.color1 {
+  color: #1bbc9b; /* MOUNTAIN MEADOW */
+}
+
+.color2 {
+  color: #c0392b; /* TALL POPPY */
+}
+
+.margin {
+  margin-top: 0.25rem;
+  margin-bottom: 0.6rem;
+}
+
+.top-view .scene {
+  transform: rotateX(75deg) translateY(-60px);
+  transition: transform 0.8s ease;
+}
+
+.top-view .a3d {
+  animation-play-state: paused;
+}

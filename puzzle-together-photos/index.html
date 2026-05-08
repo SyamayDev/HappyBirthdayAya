@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Susun Puzzle-nya!</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../heart-trail-animation-main/style.css">
+    <link rel="stylesheet" href="../heart-animation-main/style.css">
+</head>
+<body>
+    <!-- BACKSOUND AUDIO (persist across pages) -->
+    <audio id="backsound" src="../backsound.mp3" preload="auto" autoplay loop></audio>
+    <!-- Container for the heart animation background -->
+    <div class="heart-container"></div>
+
+    <!-- Pre-Puzzle Modal -->
+    <div id="pre-puzzle-modal" class="pre-puzzle-modal" style="display: block;">
+      <div class="pre-puzzle-modal-content">
+        <h2>Sebelum Mulai, Aya... 💕</h2>
+        <p class="puzzle-message">
+          Pertama-tama selesaikan puzzlenya dulu yah sayang, karena hubungan itu pasti ada rintangan.
+        </p>
+        <p class="puzzle-quote">
+          "Setiap tantangan yang kita hadapi bersama, membuat hubungan kita semakin kuat. Yuk Sayaang selesaikan puzzlenya dengan perasaan dan kesabaran."
+        </p>
+        <button id="start-puzzle-btn" class="puzzle-btn" onclick="document.getElementById('pre-puzzle-modal').style.display='none'; document.getElementById('forPuzzle').style.display='block'; if(typeof startPuzzleGame==='function') startPuzzleGame();">Siap! Mari Mulai</button>
+      </div>
+    </div>
+
+    <div id="forPuzzle" style="display: none;"></div>
+
+    <div class="envlope-wrapper" style="display: none;">
+        <div id="envelope" class="close">
+          <div class="front flap"></div>
+          <div class="front pocket"></div>
+          <div class="letter">
+            <div class="words line1"></div>
+            <div class="words line2"></div>
+            <div class="words line3"></div>
+            <div class="words line4"></div>
+          </div>
+          <div class="hearts">
+            <div class="heart a1"></div>
+            <div class.heart a2"></div>
+            <div class="heart a3"></div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Modal Electric Pink -->
+      <div id="modal" class="modal">
+        <svg class="svg-container">
+          <defs>
+            <filter id="turbulent-displace" colorInterpolationFilters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="1" />
+              <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">
+                <animate attributeName="dy" values="700; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
+              </feOffset>
+              <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="1" />
+              <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">
+                <animate attributeName="dy" values="0; -700" dur="6s" repeatCount="indefinite" calcMode="linear" />
+              </feOffset>
+              <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="2" />
+              <feOffset in="noise1" dx="0" dy="0" result="offsetNoise3">
+                <animate attributeName="dx" values="490; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
+              </feOffset>
+              <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="2" />
+              <feOffset in="noise2" dx="0" dy="0" result="offsetNoise4">
+                <animate attributeName="dx" values="0; -490" dur="6s" repeatCount="indefinite" calcMode="linear" />
+              </feOffset>
+              <feComposite in="offsetNoise1" in2="offsetNoise2" result="part1" />
+              <feComposite in="offsetNoise3" in2="offsetNoise4" result="part2" />
+              <feBlend in="part1" in2="part2" mode="color-dodge" result="combinedNoise" />
+              <feDisplacementMap in="SourceGraphic" in2="combinedNoise" scale="30" xChannelSelector="R" yChannelSelector="B" />
+            </filter>
+          </defs>
+        </svg>
+    
+        <div class="card-container">
+          <div class="inner-container">
+            <div class="border-outer">
+              <div class="main-card"></div>
+            </div>
+            <div class="glow-layer-1"></div>
+            <div class="glow-layer-2"></div>
+          </div>
+          <div class="overlay-1"></div>
+          <div class="overlay-2"></div>
+          <div class="background-glow"></div>
+    
+          <div class="content-container">
+            <div class="content-top">
+              <div class="scrollbar-glass">🎉Selamat Yah Cayaang!</div>
+              <p class="title">Tuhkan Cayang Pasti Bisa!</p>
+            </div>
+    
+            <hr class="divider" />
+    
+            <div class="content-bottom">
+              <p class="description">
+                Dengan komunikasi dan sabar pasti masalah bisa teratasi. Terimakasih telah berjuang sejauh ini, di bawah ini kado aya. Silahkan klik tombol di bawah untuk melihat hadiah selanjutnya! 💝
+              </p>
+              <button id="close-modal" class="modal-button">
+                Buka Hadiah Aya
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+    <script src="../heart-trail-animation-main/index.js"></script>
+    <script src="../heart-animation-main/anime.min.js"></script>
+    <script src="puzzle-animation.js"></script>
+    <script>
+        // === HEART ANIMATION BACKGROUND ===
+        const container = document.querySelector('.heart-container');
+        for (let i = 1; i <= 100; i++) {
+            const hearts = document.createElement('div');
+            hearts.classList.add('heart');
+            container.appendChild(hearts);
+        }
+
+        function animateHearts() {
+            anime({
+                targets: '.heart',
+                translateX: function() {
+                    return anime.random(-window.innerWidth, window.innerWidth);
+                },
+                translateY: function() {
+                    return anime.random(-window.innerHeight, window.innerHeight);
+                },
+                rotate: 45,
+                scale: function() {
+                    return anime.random(1, 5);
+                },
+                easing: 'easeInOutBack',
+                duration: 3000,
+                delay: anime.stagger(10),
+                complete: animateHearts,
+            });
+        }
+        animateHearts();
+    </script>
+
+    <script>
+        // === BACKSOUND PERSISTENCE ===
+        const backsound = document.getElementById('backsound');
+        const lastTime = localStorage.getItem('backsoundTime');
+        if (lastTime) backsound.currentTime = parseFloat(lastTime);
+        backsound.addEventListener('timeupdate', () => {
+          localStorage.setItem('backsoundTime', backsound.currentTime);
+        });
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) backsound.pause();
+          else backsound.play();
+        });
+
+        // === PRE-PUZZLE MODAL HANDLER ===
+        document.getElementById('start-puzzle-btn').addEventListener('click', function() {
+          document.getElementById('pre-puzzle-modal').style.display = 'none';
+          document.getElementById('forPuzzle').style.display = 'block';
+          // Trigger puzzle initialization if not already done
+          if (typeof startPuzzleGame === 'function') {
+            startPuzzleGame();
+          }
+        });
+    </script>
+    </body>
+</html>

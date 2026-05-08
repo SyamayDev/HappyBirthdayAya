@@ -1,0 +1,677 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(180deg, #ff1744 0%, #e91e63 100%);
+  overflow: hidden; /* Hide overflow from animation */
+}
+
+.heart-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Place it behind everything */
+  overflow: hidden;
+  filter: brightness(0.8); /* Dim the background hearts */
+}
+
+/* Make puzzle and envelope transparent to see the background */
+#forPuzzle,
+.envlope-wrapper {
+  background-color: transparent;
+}
+
+#forPuzzle {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* === ENVELOPE PINK (sudah di-compile dari SCSS kamu) === */
+$color-env: #ff69b4;
+$color-env2: #ff5eb0;
+$color-flap: #d13f8a;
+$color-bg: #fff0f7;
+$color-heart: #ff1493;
+
+.envlope-wrapper {
+  height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.envlope-wrapper.visible {
+  opacity: 1;
+}
+
+#envelope {
+  position: relative;
+  width: 280px;
+  height: 180px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  margin-left: auto;
+  margin-right: auto;
+  top: 150px;
+  background-color: #d13f8a;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+.front {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 3;
+}
+.flap {
+  border-left: 140px solid transparent;
+  border-right: 140px solid transparent;
+  border-bottom: 82px solid transparent;
+  border-top: 98px solid #d13f8a;
+  transform-origin: top;
+  pointer-events: none;
+}
+.pocket {
+  border-left: 140px solid #ff69b4;
+  border-right: 140px solid #ff69b4;
+  border-bottom: 90px solid #ff5eb0;
+  border-top: 90px solid transparent;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.letter {
+  position: relative;
+  background-color: #fff;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  height: 90%;
+  top: 5%;
+  border-radius: 6px;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.12);
+}
+.letter:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 25%,
+    rgba(215, 227, 239, 0.7) 55%,
+    rgba(215, 227, 239, 1) 100%
+  );
+}
+.words {
+  position: absolute;
+  left: 10%;
+  width: 80%;
+  height: 14%;
+  background-color: #eeeff0;
+}
+.words.line1 {
+  top: 15%;
+  width: 20%;
+  height: 7%;
+}
+.words.line2 {
+  top: 30%;
+}
+.words.line3 {
+  top: 50%;
+}
+.words.line4 {
+  top: 70%;
+}
+
+.open .flap {
+  transform: rotateX(180deg);
+  transition:
+    transform 0.4s ease,
+    z-index 0.6s;
+  z-index: 1;
+}
+.close .flap {
+  transform: rotateX(0deg);
+  transition:
+    transform 0.4s 0.6s ease,
+    z-index 1s;
+  z-index: 5;
+}
+.close .letter {
+  transform: translateY(0px);
+  transition:
+    transform 0.4s ease,
+    z-index 1s;
+  z-index: 1;
+}
+.open .letter {
+  transform: translateY(-60px);
+  transition:
+    transform 0.4s 0.6s ease,
+    z-index 0.6s;
+  z-index: 2;
+}
+
+.hearts {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+.heart {
+  position: absolute;
+  bottom: 0;
+  right: 10%;
+  pointer-events: none;
+}
+.heart:before,
+.heart:after {
+  position: absolute;
+  content: "";
+  left: 50px;
+  top: 0;
+  width: 50px;
+  height: 80px;
+  background: #ff1493;
+  border-radius: 50px 50px 0 0;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+.heart:after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+.close .heart {
+  opacity: 0;
+  animation: none;
+}
+
+.a1 {
+  left: 20%;
+  transform: scale(0.6);
+  animation:
+    slideUp 4s linear 1,
+    sideSway 2s ease-in-out 4 alternate;
+  animation-fill-mode: forwards;
+  animation-delay: 0.7s;
+}
+.a2 {
+  left: 55%;
+  transform: scale(1);
+  animation:
+    slideUp 5s linear 1,
+    sideSway 4s ease-in-out 2 alternate;
+  animation-fill-mode: forwards;
+  animation-delay: 0.7s;
+}
+.a3 {
+  left: 10%;
+  transform: scale(0.8);
+  animation:
+    slideUp 7s linear 1,
+    sideSway 2s ease-in-out 6 alternate;
+  animation-fill-mode: forwards;
+  animation-delay: 0.7s;
+}
+@keyframes slideUp {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: -600px;
+  }
+}
+@keyframes sideSway {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: 50px;
+  }
+}
+
+/* === MODAL ELECTRIC PINK (sudah 100% sesuai contoh yang kamu kasih) === */
+:root {
+  --electric-border-color: #ff69b4;
+  --electric-light-color: oklch(from var(--electric-border-color) 1 c h);
+  --gradient-color: oklch(
+    from var(--electric-border-color) 0.2 calc(c / 2) h / 0.9
+  );
+  --color-neutral-900: oklch(0.185 0 0);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
+.svg-container {
+  position: absolute;
+}
+
+.card-container {
+  padding: 2px;
+  border-radius: 24px;
+  position: relative;
+  background:
+    linear-gradient(
+      -30deg,
+      var(--gradient-color),
+      transparent,
+      var(--gradient-color)
+    ),
+    linear-gradient(
+      to bottom,
+      var(--color-neutral-900),
+      var(--color-neutral-900)
+    );
+}
+.inner-container {
+  position: relative;
+}
+.border-outer {
+  border: 2px solid rgba(255, 105, 180, 0.5);
+  border-radius: 24px;
+  padding-right: 4px;
+  padding-bottom: 4px;
+}
+.main-card {
+  width: 350px;
+  height: 500px;
+  border-radius: 24px;
+  border: 2px solid var(--electric-border-color);
+  margin-top: -4px;
+  margin-left: -4px;
+  filter: url(#turbulent-displace);
+}
+.glow-layer-1 {
+  border: 2px solid rgba(255, 105, 180, 0.6);
+  border-radius: 24px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: blur(1px);
+}
+.glow-layer-2 {
+  border: 2px solid var(--electric-light-color);
+  border-radius: 24px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: blur(4px);
+}
+.overlay-1,
+.overlay-2 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 24px;
+  mix-blend-mode: overlay;
+  transform: scale(1.1);
+  filter: blur(16px);
+  background: linear-gradient(
+    -30deg,
+    white,
+    transparent 30%,
+    transparent 70%,
+    white
+  );
+}
+.overlay-1 {
+  opacity: 1;
+}
+.overlay-2 {
+  opacity: 0.5;
+}
+.background-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 24px;
+  filter: blur(32px);
+  transform: scale(1.1);
+  opacity: 0.3;
+  z-index: -1;
+  background: linear-gradient(
+    -30deg,
+    var(--electric-light-color),
+    transparent,
+    var(--electric-border-color)
+  );
+}
+
+.content-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+.content-top {
+  display: flex;
+  flex-direction: column;
+  padding: 48px;
+  padding-bottom: 16px;
+  height: 100%;
+}
+.content-bottom {
+  display: flex;
+  flex-direction: column;
+  padding: 48px;
+  padding-top: 16px;
+}
+.scrollbar-glass {
+  background:
+    radial-gradient(
+      47.2% 50% at 50.39% 88.37%,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    rgba(255, 255, 255, 0.04);
+  position: relative;
+  transition: background 0.3s ease;
+  border-radius: 14px;
+  padding: 8px 16px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.scrollbar-glass:hover {
+  background:
+    radial-gradient(
+      47.2% 50% at 50.39% 88.37%,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    rgba(255, 255, 255, 0.08);
+}
+.title {
+  font-size: 36px;
+  font-weight: 500;
+  margin-top: auto;
+}
+.description {
+  opacity: 0.8;
+  font-size: 18px;
+  line-height: 1.5;
+}
+.divider {
+  margin-top: auto;
+  border: none;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.1;
+  mask-image: linear-gradient(to right, transparent, black, transparent);
+}
+.modal-button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+.modal-button:hover {
+  background-color: #d13f8a;
+}
+
+/* a hack to avoid all the ui elements from the puzzle script */
+#menu {
+  display: none !important;
+}
+
+/* ============= RESPONSIVE DESIGN ============= */
+@media (max-width: 768px) {
+  .main-card {
+    width: min(350px, 90vw) !important;
+    height: auto !important;
+  }
+
+  .content-container {
+    width: min(350px, 90vw) !important;
+  }
+
+  .content-top {
+    padding: clamp(24px, 5vw, 48px);
+    padding-bottom: 12px;
+  }
+
+  .content-bottom {
+    padding: clamp(24px, 5vw, 48px);
+    padding-top: 12px;
+  }
+
+  .title {
+    font-size: clamp(24px, 5vw, 36px);
+  }
+
+  .description {
+    font-size: clamp(14px, 3.5vw, 18px);
+  }
+
+  .modal-button {
+    font-size: clamp(13px, 2.5vw, 16px);
+    padding: clamp(10px, 2vw, 12px) clamp(18px, 4vw, 24px);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-card {
+    width: 90vw !important;
+    height: auto !important;
+  }
+
+  .content-container {
+    width: 90vw !important;
+  }
+
+  .content-top {
+    padding: 20px;
+    padding-bottom: 10px;
+  }
+
+  .content-bottom {
+    padding: 20px;
+    padding-top: 10px;
+  }
+
+  .title {
+    font-size: clamp(20px, 4vw, 28px);
+  }
+
+  .description {
+    font-size: clamp(12px, 3vw, 15px);
+  }
+
+  .modal-button {
+    font-size: clamp(12px, 2vw, 14px);
+    padding: clamp(8px, 1.5vw, 10px) clamp(16px, 3vw, 20px);
+  }
+
+  .scrollbar-glass {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+/* ============= PRE-PUZZLE MODAL STYLES ============= */
+.pre-puzzle-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+}
+
+.pre-puzzle-modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #ff69b4, #ff1493);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  color: white;
+  animation: slideInUp 0.5s ease;
+}
+
+.pre-puzzle-modal-content h2 {
+  font-size: 28px;
+  margin: 0 0 20px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.puzzle-message {
+  font-size: 16px;
+  margin: 15px 0;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.puzzle-quote {
+  font-size: 14px;
+  margin: 20px 0 25px 0;
+  line-height: 1.8;
+  font-style: italic;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid white;
+}
+
+.puzzle-btn {
+  background-color: white;
+  color: #ff1493;
+  border: none;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.puzzle-btn:hover {
+  background-color: #fff5f8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .pre-puzzle-modal-content {
+    padding: 30px 20px;
+    max-width: 90vw;
+  }
+
+  .pre-puzzle-modal-content h2 {
+    font-size: 24px;
+  }
+
+  .puzzle-message {
+    font-size: 15px;
+  }
+
+  .puzzle-quote {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  .puzzle-btn {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pre-puzzle-modal-content {
+    padding: 20px 15px;
+  }
+
+  .pre-puzzle-modal-content h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  .puzzle-message {
+    font-size: 14px;
+  }
+
+  .puzzle-quote {
+    font-size: 12px;
+    padding: 10px;
+    margin: 15px 0 20px 0;
+  }
+
+  .puzzle-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+    width: 100%;
+  }
+}

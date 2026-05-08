@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kejutan Terakhir!</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../heart-animation-main/style.css" />
+    <link rel="stylesheet" href="../heart-trail-animation-main/style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./three/build/three.module.js",
+          "three/addons/controls/OrbitControls.js": "./three/examples/jsm/controls/OrbitControls.js",
+          "three/examples/jsm/loaders/FontLoader.js": "./three/examples/jsm/loaders/FontLoader.js",
+          "three/examples/jsm/geometries/TextGeometry.js": "./three/examples/jsm/geometries/TextGeometry.js"
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- BACKSOUND AUDIO (persist across pages) -->
+    <audio
+      id="backsound"
+      src="../backsound.mp3"
+      preload="auto"
+      autoplay
+      loop
+    ></audio>
+    <div class="container"></div>
+    <div id="container"></div>
+    <div id="landscape-warning">
+      <div class="warning-content">
+        <div class="rotate-icon"></div>
+        <h1>Aya & Ayil</h1>
+        <div class="stars-bg"></div>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script src="../heart-trail-animation-main/index.js"></script>
+    <script src="../heart-animation-main/anime.min.js"></script>
+    <script>
+      // === HEART ANIMATION BACKGROUND ===
+      const container = document.querySelector(".container");
+      for (let i = 1; i <= 100; i++) {
+        const hearts = document.createElement("div");
+        hearts.classList.add("heart");
+        container.appendChild(hearts);
+      }
+
+      function animateHearts() {
+        anime({
+          targets: ".heart",
+          translateX: function () {
+            return anime.random(-700, 700);
+          },
+          translateY: function () {
+            return anime.random(-500, 500);
+          },
+          rotate: 45,
+          scale: function () {
+            return anime.random(1, 5);
+          },
+          easing: "easeInOutBack",
+          duration: 3000,
+          delay: anime.stagger(10),
+          complete: animateHearts,
+        });
+      }
+
+      animateHearts();
+      // === BACKSOUND PERSISTENCE ===
+      const backsound = document.getElementById("backsound");
+      const lastTime = localStorage.getItem("backsoundTime");
+      if (lastTime) backsound.currentTime = parseFloat(lastTime);
+      backsound.addEventListener("timeupdate", () => {
+        localStorage.setItem("backsoundTime", backsound.currentTime);
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) backsound.pause();
+        else backsound.play();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tiup Lilinnya!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
+    />
+    <link rel="stylesheet" href="../heart-animation-main/style.css" />
+    <link rel="stylesheet" href="../heart-trail-animation-main/style.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+  </head>
+  <body>
+    <!-- BACKSOUND AUDIO (persist across pages) -->
+    <audio
+      id="backsound"
+      src="../backsound.mp3"
+      preload="auto"
+      autoplay
+      loop
+    ></audio>
+    <div class="container"></div>
+    <div class="guidance">
+      <p>Klik di atas kue untuk menaruh lilin</p>
+      <p>Tiup lilinnya dengan meniup ke mikrofon</p>
+      <p>Ucapkan kata rahasia untuk kejutan!</p>
+    </div>
+    <!-- Cute Instruction Modal -->
+    <div id="cake-instructions" class="cake-modal" aria-hidden="true">
+      <div class="cake-modal-content">
+        <h2>Hai Aya! 🎂</h2>
+        <ol>
+          <li>Silakan berada di ruangan hening.</li>
+          <li>Ketuk kue untuk meletakkan lilin.</li>
+          <li>Tiup kue tersebut (gunakan mikrofon).</li>
+          <li>Ucapkan <strong>"ayil sayang aya"</strong> untuk kejutan.</li>
+        </ol>
+        <div class="cake-modal-actions">
+          <button id="cake-start-btn">Siap, Mulai</button>
+        </div>
+      </div>
+    </div>
+    <div class="candle-count-display">
+      Lilin di atas kue: <span id="candleCount">0</span>
+    </div>
+    <div class="cake">
+      <div class="plate"></div>
+      <div class="layer layer-bottom"></div>
+      <div class="layer layer-middle"></div>
+      <div class="layer layer-top"></div>
+      <div class="icing"></div>
+      <div class="drip drip1"></div>
+      <div class="drip drip2"></div>
+      <div class="drip drip3"></div>
+    </div>
+    <script src="../heart-animation-main/anime.min.js"></script>
+    <script src="../heart-trail-animation-main/index.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

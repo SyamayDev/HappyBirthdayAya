@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Selamat Ulang Tahun, Aya!</title>
+    <link rel="stylesheet" href="heart-animation-main/style.css" />
+    <link rel="stylesheet" href="heart-trail-animation-main/style.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Indie+Flower");
+      @import url("https://fonts.googleapis.com/css?family=Amatic+SC");
+
+      html,
+      body {
+        min-height: 100vh;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: linear-gradient(180deg, #ff1744 0%, #e91e63 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow-x: hidden;
+      }
+
+      .container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .modal-open .app,
+      .modal-open .container {
+        filter: blur(8px) brightness(0.7);
+        transition: filter 0.5s ease;
+      }
+
+      .permission-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 105, 180, 0.18);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+        backdrop-filter: blur(2px) brightness(0.9);
+      }
+      .permission-modal.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .card-container {
+        padding: 0;
+        border-radius: 24px;
+        position: relative;
+        background: none;
+        box-shadow:
+          0 8px 32px 0 rgba(255, 105, 180, 0.18),
+          0 1.5px 8px 0 rgba(255, 105, 180, 0.12);
+        animation: fadeIn 0.5s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .inner-container {
+        position: relative;
+      }
+      .border-outer {
+        border: none;
+        border-radius: 24px;
+        padding: 0;
+        background: none;
+      }
+      .main-card {
+        display: none;
+      }
+
+      @media (max-width: 600px) {
+        .main-card {
+          width: 95vw;
+          height: auto;
+          min-height: 180px;
+          padding: 10px 0;
+        }
+        .content-container {
+          padding: 10px;
+        }
+        .book-container {
+          padding-top: 20px;
+          padding-bottom: 40px;
+        }
+        .book {
+          width: 90vw;
+          height: 220px;
+        }
+        .scene {
+          height: 28vh;
+        }
+        .container {
+          min-height: 100vh;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .main-card {
+          font-size: 0.9em;
+        }
+        .book {
+          height: 160px;
+        }
+      }
+
+      .content-container {
+        min-width: 270px;
+        min-height: 180px;
+        background: linear-gradient(135deg, #fff0f7 60%, #ffe3f3 100%);
+        border-radius: 24px;
+        box-shadow:
+          0 8px 32px 0 rgba(255, 105, 180, 0.18),
+          0 1.5px 8px 0 rgba(255, 105, 180, 0.12);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #d13f8a;
+        text-align: center;
+        padding: 32px 24px 24px 24px;
+        position: relative;
+        border: 2.5px solid #ff69b4;
+        animation: fadeIn 0.7s cubic-bezier(0.4, 2, 0.6, 1) both;
+      }
+      .content-container::before {
+        content: "";
+        position: absolute;
+        top: -18px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 60px;
+        background: url("https://cdn4.iconfinder.com/data/icons/small-n-flat/24/heart-512.png")
+          no-repeat center/contain;
+        filter: drop-shadow(0 2px 8px #ff69b4aa);
+        z-index: 2;
+        animation: pulse 1.5s infinite;
+      }
+      .permission-title {
+        font-size: 2rem;
+        font-family: "Amatic SC", cursive;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #d13f8a;
+        letter-spacing: 1px;
+      }
+      .permission-description {
+        opacity: 0.9;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        margin-bottom: 24px;
+        color: #b94e8a;
+      }
+      .permission-button {
+        padding: 14px 32px;
+        background: linear-gradient(90deg, #ff69b4 60%, #ffb6d5 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-family: "Amatic SC", cursive;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #ff69b4aa;
+        transition:
+          background 0.3s,
+          transform 0.2s;
+        animation: pulse 2s infinite;
+      }
+      .permission-button:hover {
+        background: linear-gradient(90deg, #d13f8a 60%, #ffb6d5 100%);
+        transform: scale(1.07);
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.08);
+        }
+      }
+
+      .app {
+        width: 100%;
+        max-width: 960px;
+        display: flex; /* Changed from none to flex */
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        transition: filter 0.5s ease;
+      }
+      .scene {
+        display: grid;
+        width: 100%;
+        max-width: 960px;
+        height: 40vh;
+        place-items: center;
+        perspective: 35em;
+        overflow: hidden;
+        margin-bottom: -100px;
+        mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
+        -webkit-mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
+      }
+
+      .a3d {
+        display: grid;
+        place-self: center;
+        transform-style: preserve-3d;
+        animation: ry 32s linear infinite;
+      }
+
+      @keyframes ry {
+        to {
+          rotate: y 1turn;
+        }
+      }
+
+      .card {
+        --w: 15em;
+        --ba: 1turn / var(--n);
+        grid-area: 1 / 1;
+        width: var(--w);
+        aspect-ratio: 7 / 10;
+        object-fit: cover;
+        border-radius: 1.5em;
+        backface-visibility: hidden;
+        transform: rotatey(calc(var(--i) * var(--ba)))
+          translatez(calc(-1 * (0.5 * var(--w) + 0.5em) / tan(0.5 * var(--ba))));
+      }
+
+      .book-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        perspective: 1200px;
+        padding-top: 50px;
+        padding-bottom: 150px;
+      }
+
+      .book {
+        position: relative;
+        width: 300px;
+        height: 400px;
+        background: #e0e1dc;
+        transform-style: preserve-3d;
+        transform: rotateX(50deg); /* Corrected transform */
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.4); /* Corrected shadow */
+        transition:
+          transform 1s cubic-bezier(0.25, 1, 0.5, 1),
+          box-shadow 1s ease;
+        cursor: pointer;
+      }
+
+      .book:before {
+        content: "";
+        position: absolute;
+        top: -5px;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: #bac1ba;
+        transform-origin: bottom;
+        transform: skewX(-45deg);
+      }
+      .book:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -5px;
+        width: 5px;
+        height: 100%;
+        background: #92a29c;
+        transform-origin: left;
+        transform: skewY(-45deg);
+      }
+
+      .book.open {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1.2); /* Adjusted scale */
+        box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+      }
+
+      .book .imgBox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform-origin: left;
+        transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        z-index: 2;
+        background: #fff;
+      }
+
+      .book .imgBox img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .book.open .imgBox {
+        transform: rotateY(-145deg);
+        box-shadow: 10px 0 20px rgba(0, 0, 0, 0.3) inset;
+      }
+
+      .book .details {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        padding: 50px 20px;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        background: #e0e1dc;
+      }
+
+      .book .details p {
+        font-size: 15px;
+        line-height: 1.2;
+        margin: 5px 0;
+        font-family: "Indie Flower", cursive;
+      }
+
+      .book .details h4 {
+        text-align: center;
+        font-size: 26px;
+        line-height: 1;
+        font-family: "Amatic SC", cursive;
+        margin: 0 0 1rem 0;
+      }
+      .puzzle-button {
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        border: none;
+        background-color: #ff7e9a;
+        color: white;
+        border-radius: 5px;
+        margin-top: 20px;
+        align-self: center;
+      }
+    </style>
+  </head>
+  <body class="modal-open">
+    <div id="permission-modal" class="permission-modal">
+      <div class="card-container">
+        <div class="inner-container">
+          <div class="border-outer">
+            <div class="main-card"></div>
+          </div>
+        </div>
+        <div class="content-container">
+          <p class="permission-title">Selamat Datang!</p>
+          <p class="permission-description">
+            Untuk pengalaman terbaik, izinkan akses mikrofon dan audio.
+          </p>
+          <button id="grant-permission-button" class="permission-button">
+            Izinkan
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- BACKSOUND AUDIO (autoplay, loop, persist) -->
+    <audio
+      id="backsound"
+      src="backsound.mp3"
+      preload="auto"
+      autoplay
+      loop
+    ></audio>
+    <div id="player" style="display: none"></div>
+    <div class="container"></div>
+    <div class="app" style="z-index: 1">
+      <div class="scene">
+        <div class="a3d" id="cards"></div>
+      </div>
+
+      <section class="book-container" aria-label="Birthday card">
+        <div class="book" id="book">
+          <div class="imgBox">
+            <img src="card-animation/images/cover-book.jpg" alt="book cover" />
+          </div>
+          <div class="details">
+            <h4>Selamat Ulang Tahun ke-18, Ayaaa Tersayang!</h4>
+            <p>Hai Sayaang Ayil,</p>
+            <p>
+              Selamat ulang tahun yaa. Semoga di umur yang baru ini, ayaaa selalu
+              diberikan kebahagiaan, kesehatan, dan semua yang ayaaa cita-citakan
+              bisa tercapai.
+            </p>
+            <p>Ayill punya sesuatu buat ayaa-nya. Klik tombol di bawah yaa!</p>
+            <button
+              class="puzzle-button"
+              onclick="
+                window.location.href = 'puzzle-together-photos/index.html'
+              "
+            >
+              Buka!
+            </button>
+            <p class="text-right" style="margin-top: auto">Dari Ayil</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="heart-trail-animation-main/index.js"></script>
+    <script src="heart-animation-main/anime.min.js"></script>
+    <script>
+      document.body.classList.add("modal-open");
+      // === YOUTUBE PLAYER ===
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player("player", {
+          height: "0",
+          width: "0",
+          videoId: "QgaTQ5-XfMM", // A Thousand Years - Christina Perri
+          events: {
+            onReady: onPlayerReady,
+          },
+        });
+      }
+
+      function onPlayerReady(event) {
+        // Player is ready
+      }
+
+      // === PERMISSION LOGIC ===
+      const permissionModal = document.getElementById("permission-modal");
+      const grantPermissionButton = document.getElementById(
+        "grant-permission-button",
+      );
+
+      grantPermissionButton.addEventListener("click", () => {
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
+          .then((stream) => {
+            permissionModal.classList.add("hidden");
+            document.body.classList.remove("modal-open");
+            player.playVideo();
+            // Handle stream if needed
+          })
+          .catch((err) => {
+            alert(
+              "Gagal mendapatkan izin. Silakan segarkan halaman dan coba lagi.",
+            );
+          });
+      });
+
+      // === CAROUSEL LOGIC ===
+      const DATA = [
+        "Galaxy-love-main/images/img1.jpg",
+        "Galaxy-love-main/images/img2.jpg",
+        "Galaxy-love-main/images/img3.jpg",
+        "Galaxy-love-main/images/img4.jpg",
+        "Galaxy-love-main/images/img5.jpg",
+        "Galaxy-love-main/images/img7.jpg",
+        "Galaxy-love-main/images/img8.jpg",
+        "Galaxy-love-main/images/img9.jpg",
+        "Galaxy-love-main/images/img10.jpg",
+        "Galaxy-love-main/images/img11.jpg",
+      ];
+
+      const cardsEl = document.getElementById("cards");
+      cardsEl.style.setProperty("--n", DATA.length);
+
+      DATA.forEach((src, i) => {
+        const img = document.createElement("img");
+        img.className = "card";
+        img.src = src;
+        img.alt = "photo";
+        img.style.setProperty("--i", i);
+        cardsEl.appendChild(img);
+      });
+
+      // === BOOK CLICK & CAMERA ANIMATION LOGIC ===
+      const book = document.getElementById("book");
+      const a3d = document.querySelector(".a3d");
+
+      book.addEventListener("click", () => {
+        const isOpen = book.classList.toggle("open");
+        a3d.style.animationPlayState = isOpen ? "paused" : "running";
+
+        if (isOpen) {
+          setTimeout(() => {
+            book.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 300);
+        }
+      });
+
+      // === HEART ANIMATION BACKGROUND (Smooth Loop) ===
+      const container = document.querySelector(".container");
+      const heartCount = 60;
+      const hearts = [];
+      for (let i = 0; i < heartCount; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        container.appendChild(heart);
+        hearts.push({
+          el: heart,
+          angle: Math.random() * 2 * Math.PI,
+          radius: 80 + Math.random() * 120,
+          speed: 0.2 + Math.random() * 0.3,
+          size: 0.8 + Math.random() * 1.8,
+          baseX: window.innerWidth / 2,
+          baseY: window.innerHeight / 2,
+        });
+      }
+
+      function animateHeartsSmooth() {
+        const time = Date.now() * 0.001;
+        hearts.forEach((h, i) => {
+          const x = h.baseX + Math.cos(h.angle + time * h.speed) * h.radius;
+          const y =
+            h.baseY + Math.sin(h.angle + time * h.speed) * h.radius * 0.6;
+          h.el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${h.size}) rotate(45deg)`;
+          h.el.style.opacity = 0.7;
+        });
+        requestAnimationFrame(animateHeartsSmooth);
+      }
+      animateHeartsSmooth();
+
+      // === BACKSOUND PERSISTENCE ===
+      const backsound = document.getElementById("backsound");
+      // Ambil posisi terakhir dari localStorage
+      const lastTime = localStorage.getItem("backsoundTime");
+      if (lastTime) backsound.currentTime = parseFloat(lastTime);
+      // Simpan posisi setiap detik
+      backsound.addEventListener("timeupdate", () => {
+        localStorage.setItem("backsoundTime", backsound.currentTime);
+      });
+      // Pastikan hanya satu backsound berjalan
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) backsound.pause();
+        else backsound.play();
+      });
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+  </body>
+</html>
