@@ -99,7 +99,7 @@
     
             <div class="content-bottom">
               <p class="description">
-                Dengan komunikasi dan sabar pasti masalah bisa teratasi. Terimakasih telah berjuang sejauh ini, di bawah ini kado aya. Silahkan klik tombol di bawah untuk melihat hadiah selanjutnya! 💝
+                Dengan komunikasi dan sabar pasti masalah bisa teratasi. Terimakasih telah berjuang sejauh ini, di bawah ini hadiah aya. Silahkan klik tombol di bawah untuk melihat hadiahnya! 💝
               </p>
               <button id="close-modal" class="modal-button">
                 Buka Hadiah Aya
@@ -116,34 +116,58 @@
     <script src="../heart-animation-main/anime.min.js"></script>
     <script src="puzzle-animation.js"></script>
     <script>
-        // === HEART ANIMATION BACKGROUND ===
+        // === HEART ANIMATION BACKGROUND (Smooth Loop) ===
         const container = document.querySelector('.heart-container');
-        for (let i = 1; i <= 100; i++) {
-            const hearts = document.createElement('div');
-            hearts.classList.add('heart');
-            container.appendChild(hearts);
-        }
+        const heartCount = 80;
+        const hearts = [];
 
-        function animateHearts() {
-            anime({
-                targets: '.heart',
-                translateX: function() {
-                    return anime.random(-window.innerWidth, window.innerWidth);
-                },
-                translateY: function() {
-                    return anime.random(-window.innerHeight, window.innerHeight);
-                },
-                rotate: 45,
-                scale: function() {
-                    return anime.random(1, 5);
-                },
-                easing: 'easeInOutBack',
-                duration: 3000,
-                delay: anime.stagger(10),
-                complete: animateHearts,
+        // Initialize hearts with random positions across the screen
+        for (let i = 0; i < heartCount; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            container.appendChild(heart);
+
+            hearts.push({
+                el: heart,
+                // Random starting position on screen
+                startX: Math.random() * window.innerWidth,
+                startY: Math.random() * window.innerHeight,
+                // Animation parameters
+                angle: Math.random() * Math.PI * 2,
+                radius: 150 + Math.random() * 250,
+                speed: 0.15 + Math.random() * 0.25,
+                size: 0.6 + Math.random() * 1.4,
+                duration: 15000 + Math.random() * 20000, // 15-35 seconds per loop
+                opacity: 0.3 + Math.random() * 0.5,
             });
         }
-        animateHearts();
+
+        function animateHeartsSmooth() {
+            const currentTime = Date.now();
+
+            hearts.forEach((h) => {
+                // Calculate loop progress (0 to 1)
+                const loopProgress = (currentTime % h.duration) / h.duration;
+                const time = loopProgress * Math.PI * 2;
+
+                // Calculate position with smooth circular motion
+                const offsetX = Math.cos(h.angle + time * h.speed) * h.radius;
+                const offsetY = Math.sin(h.angle + time * h.speed) * h.radius * 0.7;
+
+                const x = h.startX + offsetX;
+                const y = h.startY + offsetY;
+
+                // Apply smooth transform with proper opacity
+                h.el.style.left = x + 'px';
+                h.el.style.top = y + 'px';
+                h.el.style.opacity = h.opacity;
+                h.el.style.transform = `translate(-50%, -50%) scale(${h.size})`;
+            });
+
+            requestAnimationFrame(animateHeartsSmooth);
+        }
+
+        animateHeartsSmooth();
     </script>
 
     <script>

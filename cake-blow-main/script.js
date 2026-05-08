@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
       updateCandleCount();
-
+      
       // Confetti effect
       if (window.confetti) {
         confetti({
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
       microphone.connect(analyser);
       analyser.fftSize = 256;
       blowInterval = setInterval(blowOutCandles, 200);
-
+      
       // Start speech recognition after mic is granted
       startSpeechRecognition();
     } catch (err) {
@@ -125,17 +125,14 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function startSpeechRecognition() {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       speechRecognition = new SpeechRecognition();
       speechRecognition.continuous = true;
       speechRecognition.lang = "id-ID";
 
       speechRecognition.onstart = function () {
-        console.log(
-          "Voice recognition started. Try speaking into the microphone.",
-        );
+        console.log("Voice recognition started. Try speaking into the microphone.");
       };
 
       speechRecognition.onerror = function (event) {
@@ -148,10 +145,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Kata yang diucapkan: " + transcript);
         // Check for variations of the phrase "ayil sayang aya"
         if (
-          transcript.includes("sayang") &&
-          (transcript.includes("aya") ||
-            transcript.includes("ayil") ||
-            transcript.includes("ayl"))
+          transcript.includes("sayang") && 
+          (transcript.includes("aya") || transcript.includes("ayil") || transcript.includes("ayl"))
         ) {
           console.log("Keyword detected! Navigating to Galaxy Love page...");
           window.location.href = "../Galaxy-love-main/index.html";
