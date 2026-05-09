@@ -1,11 +1,11 @@
 body {
-  background-color: #1a1a1a;
+  background-color: #ffbfd0;
   overflow: hidden;
 }
 
 .guidance {
   text-align: center;
-  color: white;
+  color: #6b2750;
   margin-top: 50px;
   font-family: sans-serif;
 }
@@ -16,20 +16,20 @@ body {
   margin-bottom: 20px;
   font-family: "Arial", sans-serif;
   font-size: 20px;
-  color: #6a4b18;
-  background-color: #f0e4d0;
+  color: #6b2750;
+  background-color: rgba(255, 255, 255, 0.85);
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
-  border: 2px solid #553c13;
+  border: 2px solid #ff69b4;
 }
 
 .candle-count-display span {
   font-weight: bold;
-  color: #ad030f;
+  color: #d13f8a;
 }
 
 .cake {
@@ -415,187 +415,186 @@ body {
 }
 /* ================= MOBILE RESPONSIVE FIX ================= */
 @media (max-width: 768px) {
-
-  body{
+  body {
     overflow: hidden;
   }
 
   /* ================= FIX KUE NGAMBANG & HAPUS COUNT ================= */
 
-/* sembunyikan counter lilin */
-.candle-count-display{
-  display: none !important;
-}
-
-/* ================= FIX DRIP HILANG ================= */
-
-/* parent cake */
-.cake{
-  position: absolute;
-  width: 220px;
-  height: 220px;
-  left: 50%;
-  top: 58%;
-  transform: translate(-50%, -50%);
-  margin: 0;
-}
-
-/* piring */
-.plate{
-  width: 230px;
-  height: 80px;
-  position: absolute;
-  left: 50%;
-  bottom: -6px;
-  margin-bottom: 20px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(circle at center,
-    #f7f7f7 0%,
-    #dddddd 70%,
-    #bbbbbb 100%);
-  box-shadow:
-    0 10px 20px rgba(0,0,0,0.25),
-    inset 0 4px 8px rgba(255,255,255,0.7);
-  z-index: 1;
-}
-
-/* layer */
-.layer{
-  position: absolute;
-  width: 210px;
-  height: 82px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  z-index: 5;
-}
-
-.layer-top{
-  top: 30px;
-}
-
-.layer-middle{
-  top: 58px;
-}
-
-.layer-bottom{
-  top: 86px;
-}
-
-/* icing */
-.icing{
-  position: absolute;
-  width: 198px;
-  height: 74px;
-  top: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: #f0e4d0;
-  z-index: 10;
-}
-
-/* drip umum */
-.drip{
-  position: absolute;
-  display: block;
-  background: #f0e4d0;
-  z-index: 11;
-}
-
-/* drip kiri */
-.drip1{
-  width: 34px;
-  height: 48px;
-  top: 68px;
-  left: 26px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  transform: rotate(5deg);
-}
-
-/* drip kanan */
-.drip2{
-  width: 34px;
-  height: 52px;
-  top: 76px;
-  left: 160px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  transform: rotate(-6deg);
-}
-
-/* drip tengah */
-.drip3{
-  width: 64px;
-  height: 42px;
-  top: 72px;
-  left: 78px;
-  border-bottom-left-radius: 32px;
-  border-bottom-right-radius: 32px;
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
-}
-
-/* lilin */
-.candle{
-  top: 0;
-  z-index: 20;
-}
-
-/* hide counter */
-.candle-count-display{
-  display: none !important;
-}
-
-
-/* ================= MOBILE ================= */
-@media (max-width: 480px){
-
-  .cake{
-    transform: translate(-50%, -50%) scale(0.9);
-    top: 57%;
+  /* sembunyikan counter lilin */
+  .candle-count-display {
+    display: none !important;
   }
 
-  .plate{
+  /* ================= FIX DRIP HILANG ================= */
+
+  /* parent cake */
+  .cake {
+    position: absolute;
     width: 220px;
-    height: 72px;
+    height: 220px;
+    left: 50%;
+    top: 58%;
+    transform: translate(-50%, -50%);
+    margin: 0;
   }
 
-  .layer{
-    width: 195px;
-    height: 76px;
+  /* piring */
+  .plate {
+    width: 230px;
+    height: 80px;
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    margin-bottom: 20px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      #f7f7f7 0%,
+      #dddddd 70%,
+      #bbbbbb 100%
+    );
+    box-shadow:
+      0 10px 20px rgba(0, 0, 0, 0.25),
+      inset 0 4px 8px rgba(255, 255, 255, 0.7);
+    z-index: 1;
   }
 
-  .icing{
-    width: 184px;
-    height: 68px;
+  /* layer */
+  .layer {
+    position: absolute;
+    width: 210px;
+    height: 82px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    z-index: 5;
   }
 
-  .drip1{
-    left: 22px;
-    top: 66px;
-    width: 30px;
-    height: 44px;
+  .layer-top {
+    top: 30px;
   }
 
-  .drip2{
-    left: 148px;
-    top: 74px;
-    width: 30px;
+  .layer-middle {
+    top: 58px;
+  }
+
+  .layer-bottom {
+    top: 86px;
+  }
+
+  /* icing */
+  .icing {
+    position: absolute;
+    width: 198px;
+    height: 74px;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: #f0e4d0;
+    z-index: 10;
+  }
+
+  /* drip umum */
+  .drip {
+    position: absolute;
+    display: block;
+    background: #f0e4d0;
+    z-index: 11;
+  }
+
+  /* drip kiri */
+  .drip1 {
+    width: 34px;
     height: 48px;
+    top: 68px;
+    left: 26px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    transform: rotate(5deg);
   }
 
-  .drip3{
-    left: 72px;
-    top: 70px;
-    width: 58px;
-    height: 38px;
+  /* drip kanan */
+  .drip2 {
+    width: 34px;
+    height: 52px;
+    top: 76px;
+    left: 160px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    transform: rotate(-6deg);
   }
-}
+
+  /* drip tengah */
+  .drip3 {
+    width: 64px;
+    height: 42px;
+    top: 72px;
+    left: 78px;
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+  }
+
+  /* lilin */
+  .candle {
+    top: 0;
+    z-index: 20;
+  }
+
+  /* hide counter */
+  .candle-count-display {
+    display: none !important;
+  }
+
+  /* ================= MOBILE ================= */
+  @media (max-width: 480px) {
+    .cake {
+      transform: translate(-50%, -50%) scale(0.9);
+      top: 57%;
+    }
+
+    .plate {
+      width: 220px;
+      height: 72px;
+    }
+
+    .layer {
+      width: 195px;
+      height: 76px;
+    }
+
+    .icing {
+      width: 184px;
+      height: 68px;
+    }
+
+    .drip1 {
+      left: 22px;
+      top: 66px;
+      width: 30px;
+      height: 44px;
+    }
+
+    .drip2 {
+      left: 148px;
+      top: 74px;
+      width: 30px;
+      height: 48px;
+    }
+
+    .drip3 {
+      left: 72px;
+      top: 70px;
+      width: 58px;
+      height: 38px;
+    }
+  }
 }

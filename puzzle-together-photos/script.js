@@ -2495,12 +2495,6 @@ function puzzleSolved() {
     closeModalButton.addEventListener("click", function () {
       window.location.href = "../cake-blow-main/index.html";
     });
-
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal) {
-        modal.classList.remove("show");
-      }
-    });
   }, 1000);
 }
 
