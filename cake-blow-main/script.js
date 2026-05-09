@@ -8,34 +8,34 @@ document.addEventListener("DOMContentLoaded", function () {
   let blowInterval;
   let speechRecognition;
 
-  // Heart animation background
-  const container = document.querySelector(".container");
-  for (let i = 1; i <= 100; i++) {
-    const hearts = document.createElement("div");
-    hearts.classList.add("heart");
-    container.appendChild(hearts);
-  }
+  // Heart animation background - DIHAPUS untuk performa
+  // const container = document.querySelector(".container");
+  // for (let i = 1; i <= 100; i++) {
+  //   const hearts = document.createElement("div");
+  //   hearts.classList.add("heart");
+  //   container.appendChild(hearts);
+  // }
 
-  function animateHearts() {
-    anime({
-      targets: ".heart",
-      translateX: function () {
-        return anime.random(-700, 700);
-      },
-      translateY: function () {
-        return anime.random(-500, 500);
-      },
-      rotate: 45,
-      scale: function () {
-        return anime.random(1, 5);
-      },
-      easing: "easeInOutBack",
-      duration: 3000,
-      delay: anime.stagger(10),
-      complete: animateHearts,
-    });
-  }
-  animateHearts();
+  // function animateHearts() {
+  //   anime({
+  //     targets: ".heart",
+  //     translateX: function () {
+  //       return anime.random(-700, 700);
+  //     },
+  //     translateY: function () {
+  //       return anime.random(-500, 500);
+  //     },
+  //     rotate: 45,
+  //     scale: function () {
+  //       return anime.random(1, 5);
+  //     },
+  //     easing: "easeInOutBack",
+  //     duration: 3000,
+  //     delay: anime.stagger(10),
+  //     complete: animateHearts,
+  //   });
+  // }
+  // animateHearts();
 
   function updateCandleCount() {
     candleCountDisplay.textContent = candles.length;
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     let average = sum / bufferLength;
 
-    return average > 40;
+    return average > 25; // Lebih sensitive dari 40 ke 25
   }
 
   function blowOutCandles() {
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
       updateCandleCount();
-      
+
       // Confetti effect
       if (window.confetti) {
         confetti({
@@ -115,8 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
       microphone = audioContext.createMediaStreamSource(stream);
       microphone.connect(analyser);
       analyser.fftSize = 256;
-      blowInterval = setInterval(blowOutCandles, 200);
-      
+      blowInterval = setInterval(blowOutCandles, 100); // Lebih sering check dari 200ms ke 100ms
+
       // Start speech recognition after mic is granted
       startSpeechRecognition();
     } catch (err) {
@@ -125,14 +125,19 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function startSpeechRecognition() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       speechRecognition = new SpeechRecognition();
       speechRecognition.continuous = true;
+      speechRecognition.interimResults = true;
       speechRecognition.lang = "id-ID";
+      speechRecognition.maxAlternatives = 1;
 
       speechRecognition.onstart = function () {
-        console.log("Voice recognition started. Try speaking into the microphone.");
+        console.log(
+          "Voice recognition started. Try speaking into the microphone.",
+        );
       };
 
       speechRecognition.onerror = function (event) {
@@ -140,16 +145,27 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       speechRecognition.onresult = function (event) {
-        const current = event.resultIndex;
-        const transcript = event.results[current][0].transcript.toLowerCase();
-        console.log("Kata yang diucapkan: " + transcript);
-        // Check for variations of the phrase "ayil sayang aya"
-        if (
-          transcript.includes("sayang") && 
-          (transcript.includes("aya") || transcript.includes("ayil") || transcript.includes("ayl"))
-        ) {
-          console.log("Keyword detected! Navigating to Galaxy Love page...");
-          window.location.href = "../Galaxy-love-main/index.html";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript.toLowerCase();
+          console.log("Kata yang diucapkan: " + transcript);
+
+          // Check for variations - lebih fleksibel
+          const hasSayang =
+            transcript.includes("sayang") ||
+            transcript.includes("sayaang") ||
+            transcript.includes("sayangg");
+          const hasAya =
+            transcript.includes("aya") ||
+            transcript.includes("ayil") ||
+            transcript.includes("ayl") ||
+            transcript.includes("ay");
+
+          if (hasSayang && hasAya) {
+            console.log("Keyword detected! Navigating to Galaxy Love page...");
+            speechRecognition.stop(); // Stop recognition sebelum navigate
+            window.location.href = "../Galaxy-love-main/index.html";
+            break; // Keluar dari loop
+          }
         }
       };
 
