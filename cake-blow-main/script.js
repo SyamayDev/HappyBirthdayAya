@@ -102,9 +102,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // Modal handling
   const modal = document.getElementById("cake-instructions");
   const startBtn = document.getElementById("cake-start-btn");
+  const speechIndicator = document.getElementById("speech-indicator");
 
   function hideModal() {
     modal.setAttribute("aria-hidden", "true");
+  }
+
+  function updateSpeechIndicator(message, color = "#330026") {
+    if (!speechIndicator) return;
+    speechIndicator.textContent = message;
+    speechIndicator.style.color = color;
   }
 
   startBtn.addEventListener("click", async () => {
@@ -140,10 +147,15 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(
           "Voice recognition started. Try speaking into the microphone.",
         );
+        updateSpeechIndicator(
+          "Mikrofon aktif. Silakan ucapkan 'sayang' sekarang.",
+          "#1a1a1a",
+        );
       };
 
       speechRecognition.onerror = function (event) {
         console.error("Speech recognition error detected: " + event.error);
+        updateSpeechIndicator("Error microphone: " + event.error, "#ad031f");
       };
 
       speechRecognition.onresult = function (event) {
@@ -176,10 +188,12 @@ document.addEventListener("DOMContentLoaded", function () {
       speechRecognition.onend = function () {
         if (speechRecognitionActive) {
           console.log("Speech recognition ended, restarting...");
+          updateSpeechIndicator("Mencoba ulang deteksi suara...", "#6b2750");
           try {
             speechRecognition.start();
           } catch (e) {
             console.error("Unable to restart speech recognition:", e);
+            updateSpeechIndicator("Tidak dapat restart microphone.", "#ad031f");
           }
         }
       };
