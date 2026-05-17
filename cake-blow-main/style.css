@@ -348,33 +348,6 @@ body {
   font-weight: 600;
 }
 
-.speech-indicator {
-  position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1500;
-  max-width: 92vw;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid #ff69b4;
-  border-radius: 999px;
-  color: #330026;
-  font-size: 14px;
-  line-height: 1.4;
-  text-align: center;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.14);
-  pointer-events: none;
-}
-
-@media (max-width: 480px) {
-  .speech-indicator {
-    bottom: 12px;
-    padding: 10px 14px;
-    font-size: 13px;
-  }
-}
-
 .cake-modal-actions {
   display: flex;
   justify-content: center;

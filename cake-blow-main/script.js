@@ -102,21 +102,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // Modal handling
   const modal = document.getElementById("cake-instructions");
   const startBtn = document.getElementById("cake-start-btn");
-  const speechIndicator = document.getElementById("speech-indicator");
 
   function hideModal() {
     modal.setAttribute("aria-hidden", "true");
   }
 
-  function updateSpeechIndicator(message, color = "#330026") {
-    if (!speechIndicator) return;
-    speechIndicator.textContent = message;
-    speechIndicator.style.color = color;
-  }
-
   startBtn.addEventListener("click", async () => {
     hideModal();
-    updateSpeechIndicator("Meminta izin mikrofon...", "#1a1a1a");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -130,10 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
       startSpeechRecognition();
     } catch (err) {
       console.log("Unable to access microphone: " + err);
-      updateSpeechIndicator(
-        "Tidak dapat akses mikrofon: " + err.message,
-        "#ad031f",
-      );
     }
   });
 
@@ -152,38 +140,21 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(
           "Voice recognition started. Try speaking into the microphone.",
         );
-        updateSpeechIndicator(
-          "Mikrofon aktif. Silakan ucapkan 'sayang' sekarang.",
-          "#1a1a1a",
-        );
       };
 
       speechRecognition.onerror = function (event) {
         console.error("Speech recognition error detected: " + event.error);
-        updateSpeechIndicator("Error microphone: " + event.error, "#ad031f");
       };
 
       speechRecognition.onresult = function (event) {
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript.toLowerCase();
           console.log("Kata yang diucapkan: " + transcript);
-          updateSpeechIndicator("Terdeteksi: " + transcript, "#1a1a1a");
 
-          // Lebih toleran di mobile: anggap kata "sayang" cukup untuk lanjut
-          const hasSayang =
-            /\bsayang\b/.test(transcript) ||
-            transcript.includes("sayaang") ||
-            transcript.includes("sayangg");
-          const hasAya = /\b(aya|ayil|ayl|ay)\b/.test(transcript);
-
-          if (
-            hasSayang &&
-            (hasAya || transcript.trim().split(/\s+/).length === 1)
-          ) {
-            console.log("Keyword detected! Navigating to Galaxy Love page...");
-            updateSpeechIndicator(
-              "Terbaca: " + transcript + " → membuka hadiah...",
-              "#1a1a1a",
+          // Hanya cek apakah "sayang" ada di dalam kalimat
+          if (transcript.includes("sayang")) {
+            console.log(
+              "Keyword 'sayang' detected! Navigating to Galaxy Love page...",
             );
             speechRecognitionActive = false;
             try {
@@ -198,12 +169,10 @@ document.addEventListener("DOMContentLoaded", function () {
       speechRecognition.onend = function () {
         if (speechRecognitionActive) {
           console.log("Speech recognition ended, restarting...");
-          updateSpeechIndicator("Mencoba ulang deteksi suara...", "#6b2750");
           try {
             speechRecognition.start();
           } catch (e) {
             console.error("Unable to restart speech recognition:", e);
-            updateSpeechIndicator("Tidak dapat restart microphone.", "#ad031f");
           }
         }
       };
@@ -211,10 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
       speechRecognition.start();
     } else {
       console.log("Speech Recognition Not Supported");
-      updateSpeechIndicator(
-        "Speech Recognition tidak didukung di browser ini.",
-        "#ad031f",
-      );
     }
   }
 
