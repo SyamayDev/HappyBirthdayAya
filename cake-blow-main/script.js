@@ -102,9 +102,27 @@ document.addEventListener("DOMContentLoaded", function () {
   // Modal handling
   const modal = document.getElementById("cake-instructions");
   const startBtn = document.getElementById("cake-start-btn");
+  const helpBtn = document.getElementById("cake-help-btn");
+  const helpModal = document.getElementById("cake-help-modal");
+  const helpClose = document.getElementById("cake-help-close");
+  const helpNav = document.getElementById("cake-help-nav");
 
   function hideModal() {
     modal.setAttribute("aria-hidden", "true");
+  }
+
+  function showHelpModal() {
+    if (helpModal) {
+      helpModal.style.display = "flex";
+      helpModal.setAttribute("aria-hidden", "false");
+    }
+  }
+
+  function hideHelpModal() {
+    if (helpModal) {
+      helpModal.style.display = "none";
+      helpModal.setAttribute("aria-hidden", "true");
+    }
   }
 
   startBtn.addEventListener("click", async () => {
@@ -124,6 +142,32 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("Unable to access microphone: " + err);
     }
   });
+
+  if (helpBtn) {
+    helpBtn.addEventListener("click", function () {
+      showHelpModal();
+    });
+  }
+
+  if (helpClose) {
+    helpClose.addEventListener("click", function () {
+      hideHelpModal();
+    });
+  }
+
+  if (helpModal) {
+    helpModal.addEventListener("click", function (e) {
+      if (e.target === helpModal) {
+        hideHelpModal();
+      }
+    });
+  }
+
+  if (helpNav) {
+    helpNav.addEventListener("click", function () {
+      window.location.href = "../Galaxy-love-main/index.html";
+    });
+  }
 
   function startSpeechRecognition() {
     const SpeechRecognition =

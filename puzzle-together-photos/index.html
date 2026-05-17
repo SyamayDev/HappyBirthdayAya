@@ -16,23 +16,6 @@
       loop
     ></audio>
 
-    <!-- Help Button -->
-    <button id="puzzle-help-btn" class="puzzle-help-btn" aria-label="Bantuan">
-      ?
-    </button>
-
-    <!-- Help Modal -->
-    <div id="puzzle-help-modal" class="puzzle-help-modal" style="display: none">
-      <div class="puzzle-help-modal-content">
-        <button id="puzzle-help-close" class="puzzle-help-close">✕</button>
-        <h3>Bantuan 💬</h3>
-        <p>Tidak bisa beralih halaman? Tekan tombol di bawah ini!</p>
-        <button id="puzzle-help-nav-btn" class="puzzle-help-nav-btn">
-          Lanjut ke Halaman Selanjutnya →
-        </button>
-      </div>
-    </div>
-
     <!-- Pre-Puzzle Modal -->
     <div id="pre-puzzle-modal" class="pre-puzzle-modal" style="display: block">
       <div class="pre-puzzle-modal-content">
@@ -237,44 +220,6 @@
             startPuzzleGame();
           }
         });
-
-      // === HELP BUTTON AND MODAL HANDLER ===
-      const helpBtn = document.getElementById("puzzle-help-btn");
-      const helpModal = document.getElementById("puzzle-help-modal");
-      const helpClose = document.getElementById("puzzle-help-close");
-      const helpNavBtn = document.getElementById("puzzle-help-nav-btn");
-
-      // Open help modal
-      if (helpBtn) {
-        helpBtn.addEventListener("click", function (e) {
-          e.stopPropagation();
-          if (helpModal) helpModal.style.display = "flex";
-        });
-      }
-
-      // Close help modal via X button
-      if (helpClose) {
-        helpClose.addEventListener("click", function (e) {
-          e.stopPropagation();
-          if (helpModal) helpModal.style.display = "none";
-        });
-      }
-
-      // Close help modal when clicking outside (on backdrop)
-      if (helpModal) {
-        helpModal.addEventListener("click", function (e) {
-          if (e.target === helpModal) {
-            helpModal.style.display = "none";
-          }
-        });
-      }
-
-      // Navigate to next page (cake page)
-      if (helpNavBtn) {
-        helpNavBtn.addEventListener("click", function () {
-          window.location.href = "../cake-blow-main/index.html";
-        });
-      }
     </script>
   </body>
 </html>
