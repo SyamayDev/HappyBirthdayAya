@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let microphone;
   let blowInterval;
   let speechRecognition;
+  let speechRecognitionActive = false;
 
   // Heart animation background - DIHAPUS untuk performa
   // const container = document.querySelector(".container");
@@ -132,7 +133,8 @@ document.addEventListener("DOMContentLoaded", function () {
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
       speechRecognition.lang = "id-ID";
-      speechRecognition.maxAlternatives = 1;
+      speechRecognition.maxAlternatives = 3;
+      speechRecognitionActive = true;
 
       speechRecognition.onstart = function () {
         console.log(
@@ -149,22 +151,35 @@ document.addEventListener("DOMContentLoaded", function () {
           const transcript = event.results[i][0].transcript.toLowerCase();
           console.log("Kata yang diucapkan: " + transcript);
 
-          // Check for variations - lebih fleksibel
+          // Lebih toleran di mobile: anggap kata "sayang" cukup untuk lanjut
           const hasSayang =
-            transcript.includes("sayang") ||
+            /\bsayang\b/.test(transcript) ||
             transcript.includes("sayaang") ||
             transcript.includes("sayangg");
-          const hasAya =
-            transcript.includes("aya") ||
-            transcript.includes("ayil") ||
-            transcript.includes("ayl") ||
-            transcript.includes("ay");
+          const hasAya = /\b(aya|ayil|ayl|ay)\b/.test(transcript);
 
-          if (hasSayang && hasAya) {
+          if (
+            hasSayang &&
+            (hasAya || transcript.trim().split(/\s+/).length === 1)
+          ) {
             console.log("Keyword detected! Navigating to Galaxy Love page...");
-            speechRecognition.stop(); // Stop recognition sebelum navigate
+            speechRecognitionActive = false;
+            try {
+              speechRecognition.stop();
+            } catch (e) {}
             window.location.href = "../Galaxy-love-main/index.html";
-            break; // Keluar dari loop
+            break;
+          }
+        }
+      };
+
+      speechRecognition.onend = function () {
+        if (speechRecognitionActive) {
+          console.log("Speech recognition ended, restarting...");
+          try {
+            speechRecognition.start();
+          } catch (e) {
+            console.error("Unable to restart speech recognition:", e);
           }
         }
       };
@@ -182,6 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Cleanup on unload
   window.addEventListener("beforeunload", () => {
+    speechRecognitionActive = false;
     if (blowInterval) clearInterval(blowInterval);
     if (speechRecognition) {
       try {
