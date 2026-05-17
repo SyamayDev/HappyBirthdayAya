@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   startBtn.addEventListener("click", async () => {
     hideModal();
+    updateSpeechIndicator("Meminta izin mikrofon...", "#1a1a1a");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -129,6 +130,10 @@ document.addEventListener("DOMContentLoaded", function () {
       startSpeechRecognition();
     } catch (err) {
       console.log("Unable to access microphone: " + err);
+      updateSpeechIndicator(
+        "Tidak dapat akses mikrofon: " + err.message,
+        "#ad031f",
+      );
     }
   });
 
@@ -162,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript.toLowerCase();
           console.log("Kata yang diucapkan: " + transcript);
+          updateSpeechIndicator("Terdeteksi: " + transcript, "#1a1a1a");
 
           // Lebih toleran di mobile: anggap kata "sayang" cukup untuk lanjut
           const hasSayang =
@@ -175,6 +181,10 @@ document.addEventListener("DOMContentLoaded", function () {
             (hasAya || transcript.trim().split(/\s+/).length === 1)
           ) {
             console.log("Keyword detected! Navigating to Galaxy Love page...");
+            updateSpeechIndicator(
+              "Terbaca: " + transcript + " → membuka hadiah...",
+              "#1a1a1a",
+            );
             speechRecognitionActive = false;
             try {
               speechRecognition.stop();
@@ -201,6 +211,10 @@ document.addEventListener("DOMContentLoaded", function () {
       speechRecognition.start();
     } else {
       console.log("Speech Recognition Not Supported");
+      updateSpeechIndicator(
+        "Speech Recognition tidak didukung di browser ini.",
+        "#ad031f",
+      );
     }
   }
 
