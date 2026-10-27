@@ -1,0 +1,314 @@
+.progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: var(--z-dock);
+  height: 3px;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--sky-400), var(--periwinkle-500));
+  pointer-events: none;
+}
+
+.dock {
+  position: fixed;
+  left: 50%;
+  bottom: max(0.85rem, env(safe-area-inset-bottom));
+  z-index: var(--z-dock);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: calc(100vw - 1rem);
+  padding: 0.3rem;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  background: var(--glass-bg-strong);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 10px 30px rgba(31, 74, 133, 0.18);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  transform: translateX(-50%);
+}
+
+.divider {
+  width: 1px;
+  height: 26px;
+  margin-inline: 0.15rem;
+  background: var(--color-line-strong);
+  opacity: 0.6;
+}
+
+/* ── Chapter menu ───────────────────────────────────────── */
+.menuRoot {
+  position: relative;
+}
+
+.chapterButton,
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-accent-strong);
+  font-weight: 700;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+}
+
+.chapterButton {
+  padding: 0.25rem 0.75rem 0.25rem 0.3rem;
+  text-align: start;
+}
+
+.chapterButton:hover,
+.iconButton:hover {
+  background: rgba(212, 233, 255, 0.7);
+}
+
+.chapterNumber {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 650;
+  box-shadow: 0 4px 10px rgba(47, 108, 200, 0.3);
+}
+
+.chapterText {
+  display: grid;
+  line-height: 1.1;
+}
+
+.chapterKicker {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.chapterLabel {
+  font-size: var(--text-sm);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.chevron {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.menu {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 0.75rem);
+  width: min(17rem, calc(100vw - 2rem));
+  padding: 0.6rem;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--shadow-lg);
+  transform-origin: 20% 100%;
+}
+
+.menuTitle {
+  padding: 0.35rem 0.6rem 0.45rem;
+  font-size: var(--text-2xs);
+  font-weight: 800;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.menuList {
+  display: grid;
+  gap: 2px;
+  list-style: none;
+}
+
+.menuLink {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 44px;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.menuLink:hover {
+  background: var(--sky-100);
+  color: var(--ink);
+}
+
+.menuLinkCurrent {
+  background: var(--sky-100);
+  box-shadow: inset 3px 0 0 var(--blue-600);
+}
+
+.menuNumber {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-line-strong);
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--blue-700);
+}
+
+.menuLinkCurrent .menuNumber {
+  border-color: transparent;
+  background: var(--grad-primary);
+  color: var(--white);
+}
+
+.menuLabel {
+  flex: 1;
+}
+
+.menuState {
+  display: inline-flex;
+  color: var(--color-success);
+}
+
+.menuState svg {
+  width: 18px;
+  height: 18px;
+}
+
+.menuLocked {
+  color: var(--color-text-muted);
+}
+
+/* ── Icon buttons ───────────────────────────────────────── */
+.iconButton {
+  justify-content: center;
+  min-width: 46px;
+  padding: 0 0.7rem;
+}
+
+.iconButton svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.buttonText {
+  display: none;
+  font-size: var(--text-sm);
+}
+
+.isOn {
+  background: var(--sky-100);
+  color: var(--blue-700);
+}
+
+.isMuted {
+  color: var(--color-text-muted);
+}
+
+.pauseHint {
+  display: none;
+}
+
+.spin {
+  animation: dock-spin 0.9s linear infinite;
+}
+
+@keyframes dock-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.equalizer {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 20px;
+  height: 18px;
+}
+
+.equalizer span {
+  flex: 1;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--grad-primary);
+  transform-origin: 50% 100%;
+  animation: dock-eq 1s var(--ease-in-out) infinite;
+}
+
+.equalizer span:nth-child(2) {
+  animation-delay: -0.4s;
+}
+
+.equalizer span:nth-child(3) {
+  animation-delay: -0.75s;
+}
+
+.equalizer span:nth-child(4) {
+  animation-delay: -0.2s;
+}
+
+@keyframes dock-eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+:global(html[data-motion='reduced']) .equalizer span {
+  animation: none;
+  transform: scaleY(0.7);
+}
+
+@media (min-width: 640px) {
+  .buttonText {
+    display: inline;
+  }
+
+  .musicButton.isOn .pauseHint {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: -0.15rem;
+    opacity: 0.7;
+  }
+}
+
+@media (max-width: 359px) {
+  .chapterKicker {
+    display: none;
+  }
+
+  .chapterButton {
+    padding-right: 0.5rem;
+  }
+}
+
+@media print {
+  .dock,
+  .progress {
+    display: none;
+  }
+}

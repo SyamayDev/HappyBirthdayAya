@@ -1,0 +1,119 @@
+.sky {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.stars {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  border-radius: 50%;
+}
+
+.layer0 {
+  animation: static-twinkle 6s ease-in-out infinite alternate;
+}
+
+.layer1 {
+  width: 2px;
+  height: 2px;
+  animation: static-twinkle 9s ease-in-out -3s infinite alternate;
+}
+
+.layer2 {
+  width: 3px;
+  height: 3px;
+  filter: drop-shadow(0 0 3px rgba(185, 212, 255, 0.9));
+}
+
+@keyframes static-twinkle {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.band {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: 35%;
+  height: 32%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(143, 196, 251, 0.22), rgba(127, 138, 230, 0.08) 55%, transparent 75%);
+  transform: rotate(-14deg);
+}
+
+.planet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(90px, 22%, 170px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffffff 0%, #c9e1ff 18%, #8fc4fb 42%, #5468d4 78%, #2f4ea8 100%);
+  box-shadow:
+    0 0 40px rgba(159, 199, 255, 0.65),
+    0 0 110px rgba(127, 138, 230, 0.45);
+  transform: translate(-50%, -50%);
+}
+
+.ringA,
+.ringB {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 2px solid rgba(214, 228, 255, 0.55);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-18deg) scaleY(0.32);
+}
+
+.ringA {
+  width: 175%;
+  height: 175%;
+}
+
+.ringB {
+  width: 235%;
+  height: 235%;
+  border-color: rgba(197, 203, 255, 0.35);
+}
+
+.photo {
+  position: absolute;
+  width: clamp(42px, 9%, 74px);
+  aspect-ratio: 1;
+  padding: 3px;
+  border-radius: 50%;
+  background: #fdfdff;
+  box-shadow: 0 0 18px rgba(159, 199, 255, 0.75);
+  transform: translate(-50%, -50%);
+  animation: static-float 7s var(--ease-in-out) var(--delay) infinite;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+@keyframes static-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, calc(-50% - 8px));
+  }
+}
+
+:global(html[data-motion='reduced']) .photo,
+:global(html[data-motion='reduced']) .stars {
+  animation: none;
+}

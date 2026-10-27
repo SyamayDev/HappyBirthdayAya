@@ -1,0 +1,36 @@
+.balloons {
+  overflow: visible;
+}
+
+.balloon {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: balloon-float var(--dur) var(--ease-in-out) var(--delay) infinite;
+}
+
+.string {
+  fill: none;
+  stroke: rgba(70, 110, 170, 0.45);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.shine {
+  fill: rgba(255, 255, 255, 0.75);
+}
+
+.bow {
+  fill: #a5adf6;
+  stroke: #7f8ae6;
+  stroke-width: 1.5;
+}
+
+@keyframes balloon-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(2.5deg);
+  }
+}

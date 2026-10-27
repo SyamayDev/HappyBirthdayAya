@@ -1,0 +1,163 @@
+/*
+ * Design tokens — "A little universe in the sky".
+ * Every color, size, radius, shadow and timing used by the app lives here.
+ * Components should reference these variables instead of raw values.
+ *
+ * Contrast notes (checked against --sky-50 #f5faff):
+ *   --ink        #1f3a5f  ≈ 11.6:1   body text
+ *   --ink-soft   #3d5878  ≈  7.0:1   secondary text
+ *   --ink-muted  #51698a  ≈  5.4:1   captions / hints (≥ 4.5:1 on sky-100 too)
+ *   --blue-700   #2c63ad  ≈  5.9:1   links, headings, accent text
+ *   White text on --grad-primary (#2f6cc8 → #5468d4) ≥ 4.9:1
+ */
+:root {
+  /* ── Sky (primary identity) ───────────────────────────────── */
+  --sky-50: #f5faff;
+  --sky-100: #e9f4ff;
+  --sky-200: #d4e9ff;
+  --sky-300: #b6daff;
+  --sky-400: #8fc4fb;
+  --sky-500: #64a9ef;
+  --blue-600: #3a7fd5;
+  --blue-700: #2c63ad;
+  --blue-800: #1f4a85;
+
+  /* ── Supporting accents (never louder than blue) ──────────── */
+  --periwinkle-100: #eef0ff;
+  --periwinkle-200: #dfe2ff;
+  --periwinkle-300: #c5cbff;
+  --periwinkle-400: #a5adf6;
+  --periwinkle-500: #7f8ae6;
+  --periwinkle-600: #5468d4;
+  --lilac-100: #f1ecff;
+  --lilac-200: #e4dbff;
+  --pearl: #fdfdff;
+  --white: #ffffff;
+  --butter-100: #fff8de;
+  --butter-300: #ffe9a3;
+  --butter-500: #ffd36b;
+
+  /* ── Night sky (finale) ───────────────────────────────────── */
+  --night-950: #060d26;
+  --night-900: #0a1738;
+  --night-800: #112456;
+  --night-700: #1b3677;
+  --night-600: #2b4d99;
+  --night-text: #eef3ff;
+  --night-muted: #b9c7ee;
+  --star: #f4f8ff;
+
+  /* ── Text ─────────────────────────────────────────────────── */
+  --ink: #1f3a5f;
+  --ink-soft: #3d5878;
+  --ink-muted: #51698a;
+
+  /* ── Semantic roles ───────────────────────────────────────── */
+  --color-bg: var(--sky-50);
+  --color-text: var(--ink);
+  --color-text-soft: var(--ink-soft);
+  --color-text-muted: var(--ink-muted);
+  --color-heading: #24508f;
+  --color-accent: var(--blue-700);
+  --color-accent-strong: #2559a8;
+  --color-line: rgba(58, 127, 213, 0.16);
+  --color-line-strong: rgba(44, 99, 173, 0.32);
+  --color-surface: rgba(255, 255, 255, 0.74);
+  --color-surface-solid: var(--white);
+  --color-surface-tint: var(--sky-100);
+  --color-focus: #2f6cc8;
+  --color-success: #1d7a8a;
+  --color-success-bg: #e3f6f8;
+  --color-danger: #b3261e;
+  --color-danger-bg: #fdecea;
+
+  /* ── Gradients ────────────────────────────────────────────── */
+  --grad-sky: linear-gradient(180deg, #f7fbff 0%, #eaf4ff 46%, #dcecff 100%);
+  --grad-dawn: linear-gradient(180deg, #eef5ff 0%, #e6ebff 100%);
+  --grad-dusk: linear-gradient(180deg, #e6ebff 0%, #d9ddff 55%, #c9d2fb 100%);
+  --grad-night: radial-gradient(120% 80% at 50% 0%, var(--night-700) 0%, var(--night-900) 55%, var(--night-950) 100%);
+  --grad-primary: linear-gradient(120deg, #2f6cc8 0%, #5468d4 100%);
+  --grad-primary-hover: linear-gradient(120deg, #285fb3 0%, #4a5cc6 100%);
+  --grad-text: linear-gradient(100deg, #2b62b8 0%, #5b6ee0 52%, #2f7fd0 100%);
+  --grad-ribbon: linear-gradient(135deg, #a5c8ff 0%, #8f9cf3 100%);
+  --grad-paper: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+
+  /* ── Typography ───────────────────────────────────────────── */
+  --font-display: 'Fraunces Variable', 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Times New Roman', serif;
+  --font-body: 'Nunito Variable', 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --text-2xs: 0.75rem;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-md: 1.0625rem;
+  --text-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.3rem);
+  --text-xl: clamp(1.35rem, 1.2rem + 0.8vw, 1.75rem);
+  --text-2xl: clamp(1.75rem, 1.4rem + 1.6vw, 2.6rem);
+  --text-3xl: clamp(2.25rem, 1.6rem + 3vw, 3.75rem);
+  --text-hero: clamp(3.6rem, 1.6rem + 10vw, 9.5rem);
+
+  --leading-tight: 1.06;
+  --leading-snug: 1.25;
+  --leading-body: 1.65;
+  --leading-letter: 1.8;
+  --tracking-eyebrow: 0.18em;
+
+  /* ── Spacing ──────────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --gutter: clamp(1rem, 0.6rem + 2vw, 2rem);
+  --section-pad-y: clamp(4.5rem, 3rem + 6vw, 8rem);
+  --content-max: 72rem;
+  --prose-max: 38rem;
+  --dock-clearance: 6.5rem; /* keeps content clear of the floating dock */
+
+  /* ── Radius ───────────────────────────────────────────────── */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 26px;
+  --radius-xl: 36px;
+  --radius-pill: 999px;
+
+  /* ── Elevation ────────────────────────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(31, 74, 133, 0.08);
+  --shadow-sm: 0 2px 6px rgba(31, 74, 133, 0.08), 0 8px 20px rgba(31, 74, 133, 0.06);
+  --shadow-md: 0 6px 16px rgba(31, 74, 133, 0.1), 0 18px 40px rgba(31, 74, 133, 0.1);
+  --shadow-lg: 0 12px 30px rgba(31, 74, 133, 0.14), 0 30px 70px rgba(31, 74, 133, 0.14);
+  --shadow-photo: 0 1px 1px rgba(31, 74, 133, 0.08), 0 10px 24px rgba(31, 74, 133, 0.16);
+  --shadow-glow: 0 0 0 1px rgba(255, 255, 255, 0.7) inset, 0 10px 34px rgba(100, 169, 239, 0.32);
+  --shadow-button: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 8px 22px rgba(47, 108, 200, 0.32);
+
+  /* ── Glass ────────────────────────────────────────────────── */
+  --glass-bg: rgba(255, 255, 255, 0.68);
+  --glass-bg-strong: rgba(255, 255, 255, 0.86);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-blur: 14px;
+
+  /* ── Motion ───────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+  --dur-slow: 520ms;
+  --dur-slower: 900ms;
+
+  /* ── Layers ───────────────────────────────────────────────── */
+  --z-sky: 0;
+  --z-content: 1;
+  --z-decor-front: 5;
+  --z-dock: 60;
+  --z-gate: 80;
+  --z-modal: 100;
+  --z-confetti: 140;
+  --z-trail: 150;
+}
