@@ -1,0 +1,21 @@
+.icon {
+  display: inline-block;
+  filter: drop-shadow(0 4px 10px rgba(47, 127, 232, 0.55));
+  animation: morph-pulse 1.6s var(--ease-out) infinite;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+@keyframes morph-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}

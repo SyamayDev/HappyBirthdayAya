@@ -1,0 +1,240 @@
+.stage {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 30px 0 90px;
+  perspective: 1200px;
+}
+
+/* Book size: like the original 300 × 400, but never too small to read. */
+.book {
+  --bw: min(82vw, 330px);
+  --bh: max(calc(var(--bw) * 1.36), 440px);
+  position: relative;
+  width: var(--bw);
+  height: var(--bh);
+  transform-style: preserve-3d;
+  transform: rotateX(50deg);
+  box-shadow: 0 10px 30px rgba(16, 48, 106, 0.45);
+  transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 1s ease;
+  animation: book-float 4s ease-in-out infinite;
+}
+
+@keyframes book-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+
+/* page edges (the original :before/:after thickness), in blue-white */
+.book::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: #cfe3fb;
+  transform-origin: bottom;
+  transform: skewX(-45deg);
+}
+
+.book::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -6px;
+  width: 6px;
+  height: 100%;
+  background: repeating-linear-gradient(180deg, #e9f3ff 0 2px, #b9d4f5 2px 3px);
+  transform-origin: left;
+  transform: skewY(-45deg);
+}
+
+.open.book {
+  z-index: 10;
+  transform: rotateX(0deg) scale(1.12);
+  box-shadow: 10px 10px 30px rgba(16, 48, 106, 0.3);
+  animation: none;
+}
+
+/* ── Letter page ─────────────────────────────────────────── */
+.page {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 40px 22px 22px;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 27px, rgba(63, 155, 248, 0.14) 27px 28px),
+    linear-gradient(180deg, #fbfdff 0%, #eef6ff 100%);
+  color: #1d3f6e;
+}
+
+.close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(63, 155, 248, 0.12);
+  color: var(--blue-700);
+}
+
+.close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.title {
+  font-family: var(--font-title);
+  font-size: clamp(1.7rem, 1.4rem + 1vw, 2rem);
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  color: var(--blue-700);
+}
+
+.line {
+  font-family: var(--font-hand);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.08rem);
+  line-height: 1.5;
+}
+
+.cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.signOff {
+  margin-top: auto;
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  color: var(--blue-700);
+}
+
+/* ── Cover ───────────────────────────────────────────────── */
+.cover {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  background: none;
+  transform-origin: left;
+  transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.coverFront,
+.coverBack {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.coverFront {
+  background: #fff;
+}
+
+.coverFront img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.coverFront::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 14px;
+  background: linear-gradient(90deg, rgba(16, 48, 106, 0.4), rgba(255, 255, 255, 0.25) 50%, rgba(16, 48, 106, 0.1));
+}
+
+.shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.45) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: book-shine 4.5s ease-in-out 1.5s infinite;
+}
+
+@keyframes book-shine {
+  0%,
+  60% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.coverBack {
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.85) 0 16%, transparent 17%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.3) 0 6px, transparent 6px 16px),
+    linear-gradient(160deg, #cfe7ff, #9cc4ff);
+  box-shadow: inset 10px 0 20px rgba(16, 48, 106, 0.3);
+}
+
+.open .cover {
+  transform: rotateY(-145deg);
+  box-shadow: 10px 0 20px rgba(0, 0, 0, 0.3) inset;
+  pointer-events: none;
+}
+
+.cover:focus-visible {
+  outline-offset: 6px;
+}
+
+.hint {
+  font-family: var(--font-title);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(16, 48, 106, 0.45);
+  animation: hint-bounce 1.6s ease-in-out infinite;
+  transition: opacity 0.3s;
+}
+
+@keyframes hint-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.hintHidden {
+  opacity: 0;
+}
+
+@media (max-width: 640px) {
+  .open.book {
+    transform: rotateX(0deg) scale(1);
+  }
+
+  .book {
+    --bw: min(86vw, 330px);
+  }
+}

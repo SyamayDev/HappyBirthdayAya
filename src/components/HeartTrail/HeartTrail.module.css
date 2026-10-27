@@ -1,0 +1,31 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-trail);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.heart {
+  position: absolute;
+  left: -14px;
+  top: -13px;
+  width: 28px;
+  height: 26px;
+  opacity: 0;
+  background: currentColor;
+  clip-path: path('M14 25.2S1.4 17.3.2 9.2C-.7 3 6.1-1.9 11.2 2.6c1.2 1 2.1 2.2 2.8 3.4.7-1.2 1.6-2.4 2.8-3.4 5.1-4.5 11.9.4 11 6.6-1.2 8.1-13.8 16-13.8 16z');
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
+}
+
+.tone0 {
+  color: #ffffff;
+}
+
+.tone1 {
+  color: #8fd0ff;
+}
+
+.tone2 {
+  color: #3f9bf8;
+}

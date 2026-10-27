@@ -17,90 +17,75 @@ function watch(page) {
   return problems
 }
 
-async function openWithoutMusic(page) {
-  await page.goto('./')
-  await expect(page.getByRole('dialog', { name: 'Untuk Aya' })).toBeVisible()
-  await page.getByRole('button', { name: 'Buka tanpa musik' }).click()
-  await expect(page.getByRole('dialog')).toBeHidden()
+async function startWithoutMusic(page, path = './') {
+  await page.goto(path)
+  await page.reload() // a fresh visit always starts with the welcome card
+  await expect(page.getByRole('dialog', { name: 'Selamat Datang!' })).toBeVisible()
+  await page.getByRole('button', { name: 'Mulai tanpa musik' }).click()
+  await expect(page.getByRole('dialog', { name: 'Selamat Datang!' })).toBeHidden()
 }
 
-// The visible counter (the screen-reader live region repeats the same text).
-const counter = (page) => page.locator('p:not([aria-live])', { hasText: /^Foto \d+ dari 10$/ })
-
-test('the whole journey works from the gate to the final surprise', async ({ page }) => {
+test('the whole journey works like the original four pages', async ({ page }) => {
   const problems = watch(page)
-  await openWithoutMusic(page)
-  await expect(page.getByRole('heading', { level: 1, name: 'Selamat Ulang Tahun, Aya' })).toBeVisible()
+  await startWithoutMusic(page)
 
-  // Memories
-  await page.getByRole('button', { name: /Mulai perjalanan/ }).click()
-  await expect(page).toHaveURL(/#kenangan$/)
-  await page.getByRole('button', { name: 'Foto sebelumnya' }).click()
-  await expect(counter(page)).toHaveText('Foto 10 dari 10')
-  await page.getByRole('button', { name: 'Foto berikutnya' }).click()
-  await expect(counter(page)).toHaveText('Foto 1 dari 10')
-  await page.getByRole('button', { name: /Lihat lebih besar/ }).click()
-  const viewer = page.getByRole('dialog', { name: 'Foto 1 dari 10' })
-  await expect(viewer).toBeVisible()
-  await expect(viewer.getByRole('img')).toHaveJSProperty('complete', true)
+  // Home: photo ring + book
+  const ring = page.getByRole('region', { name: 'Foto-foto Aya' })
+  await expect(ring.getByRole('button')).toHaveCount(10)
+  // Keyboard focus turns the ring to that photo and pauses it; Enter opens it.
+  await ring.getByRole('button').nth(3).focus()
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('dialog', { name: 'Foto 4 dari 10' })).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toBeHidden()
-
-  // Letter
-  await page.getByRole('button', { name: 'Buka buku' }).click()
+  await page.getByRole('button', { name: 'Buka buku' }).click({ force: true })
   await expect(page.getByRole('heading', { name: 'Selamat Ulang Tahun ke-18, Ayaaa Tersayang!' })).toBeVisible()
   await page.getByRole('button', { name: 'Buka!' }).click()
-  await expect(page).toHaveURL(/#hadiah$/)
+  await expect(page).toHaveURL(/#\/puzzle$/)
 
-  // Puzzle
+  // Puzzle: drag one real piece into its slot, then let "Bantu" finish
   await page.getByRole('button', { name: 'Siap! Mari Mulai' }).click()
-  const board = page.getByRole('group', { name: /Papan puzzle/ })
-  await expect(board.getByRole('button')).toHaveCount(12)
-  await board.getByRole('button').nth(0).click()
-  await board.getByRole('button').nth(1).click()
-  await expect(page.getByText(/1 langkah/)).toBeVisible()
-  await page.getByRole('button', { name: 'Bantu susun' }).click()
-  await expect(page.getByRole('heading', { name: 'Tuhkan Cayang Pasti Bisa!' })).toBeVisible()
+  await expect(page.getByRole('dialog')).toBeHidden()
+  await page.waitForTimeout(900) // pieces fly out to their scattered places
+  const piece = page.getByRole('button', { name: /^Keping 1\./ })
+  const board = await page.locator('[class*="board"]').first().boundingBox()
+  const box = await piece.boundingBox()
+  const size = board.width / 3
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(board.x + size / 2, board.y + size / 2, { steps: 12 })
+  await page.mouse.up()
+  await expect(page.getByRole('button', { name: /^Keping 1, sudah terpasang/ })).toBeAttached()
+  for (let i = 0; i < 11; i += 1) await page.getByRole('button', { name: 'Bantu pasang satu keping' }).click()
+  await expect(page.getByRole('dialog', { name: 'Tuhkan Cayang Pasti Bisa!' })).toBeVisible({ timeout: 15_000 })
   await page.getByRole('button', { name: 'Buka Hadiah Aya' }).click()
-  await expect(page).toHaveURL(/#kue$/)
+  await expect(page).toHaveURL(/#\/kue$/)
 
   // Cake
   await page.getByRole('button', { name: 'Siap, Mulai' }).click()
-  await page.getByRole('button', { name: 'Taruh lilin di sini' }).click()
-  await expect(page.getByText(/Lilin di atas kue:\s*1/)).toBeVisible()
-  await page.getByRole('button', { name: 'Pasang 18 lilin' }).click()
-  await expect(page.getByText(/Lilin di atas kue:\s*18/)).toBeVisible()
-  // 18 flames sit close together; blow one specific flame via the keyboard path.
-  await page.getByRole('button', { name: 'Tiup lilin 5' }).focus()
-  await page.keyboard.press('Enter')
-  await expect(page.getByRole('button', { name: 'Tiup lilin 5' })).toHaveCount(0)
-  await page.getByRole('button', { name: 'Tiup lilinnya' }).click()
-  await expect(page.getByText('Semua lilin padam', { exact: true })).toBeVisible()
-  await page.getByRole('button', { name: 'Lanjut ke kejutan terakhir' }).click()
-  await expect(page).toHaveURL(/#bintang$/)
-
-  // Final surprise
-  const secret = page.getByLabel('Kata rahasia')
-  await secret.fill('halo')
+  await expect(page.getByRole('dialog')).toBeHidden()
+  await page.getByRole('button', { name: 'Taruh lilin di kue' }).click({ force: true })
+  await page.getByRole('button', { name: 'Tambah lilin' }).click()
+  await expect(page.getByText(/Lilin di atas kue:\s*2/)).toBeVisible()
+  await page.getByRole('button', { name: 'Tiup', exact: true }).click()
+  await expect(page.getByText('Ucapkan kata rahasia untuk kejutan!')).toBeVisible()
+  await page.getByLabel('Kata rahasia').fill('ayil sayang aya')
   await page.getByRole('button', { name: 'Buka', exact: true }).click()
-  await expect(page.getByRole('alert')).toContainText('belum tepat')
-  await secret.fill('ayil sayang aya')
-  await page.getByRole('button', { name: 'Buka', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'Happy Birthday Ayaa!' })).toBeVisible()
-  for (const text of ['♡Happy Birthday Sayang♡', 'I love you', 'Always & Forever', '18/05/2026']) {
-    await expect(page.getByText(text, { exact: true })).toBeVisible()
-  }
-  await expect(page.getByRole('img', { name: /Galaksi biru/ })).toBeVisible() // WebGL scene mounted
-  await page.waitForTimeout(1500)
+  await expect(page).toHaveURL(/#\/galaksi$/)
 
-  // The browser Back button walks back through chapters.
+  // Galaxy: touch the planet, fly, explore
+  await page.getByRole('button', { name: /Sentuh planetnya/ }).click()
+  await expect(page.getByText('Aya & Ayil')).toBeVisible({ timeout: 15_000 })
+  await expect(page.getByRole('button', { name: 'Putar ulang' })).toBeVisible()
+
+  // Back button returns to the previous page
   await page.goBack()
-  await expect(page).toHaveURL(/#kue$/)
+  await expect(page).toHaveURL(/#\/kue$/)
 
   expect(problems).toEqual([])
 })
 
-test('music starts from the gate button, pauses, and never asks for the microphone', async ({ page }) => {
+test('music starts from the welcome card, pauses, and never asks for the microphone', async ({ page }) => {
   const problems = watch(page)
   await page.addInitScript(() => {
     window.__micRequests = 0
@@ -115,7 +100,8 @@ test('music starts from the gate button, pauses, and never asks for the micropho
   })
   await page.goto('./')
   const audioResponse = page.waitForResponse((response) => /backsound[^/]*\.(m4a|mp3)/.test(response.url()))
-  await page.getByRole('button', { name: 'Buka kejutan' }).click()
+  // the start button gently pulses forever, so skip Playwright's "stable" wait
+  await page.getByRole('button', { name: 'Mulai', exact: true }).click({ force: true })
   expect((await audioResponse).status()).toBeLessThan(400)
   await expect(page.getByRole('button', { name: 'Jeda musik' })).toBeVisible()
   await page.getByRole('button', { name: 'Jeda musik' }).click()
@@ -124,40 +110,41 @@ test('music starts from the gate button, pauses, and never asks for the micropho
   expect(problems).toEqual([])
 })
 
-test('progress survives a refresh and assets resolve after reload', async ({ page }) => {
-  await openWithoutMusic(page)
-  await page.locator('#hadiah').scrollIntoViewIfNeeded()
-  await page.getByRole('button', { name: 'Siap! Mari Mulai' }).click()
-  await page.getByRole('button', { name: 'Bantu susun' }).click()
-  await expect(page.getByRole('heading', { name: 'Tuhkan Cayang Pasti Bisa!' })).toBeVisible()
-  await page.reload()
-  await page.getByRole('button', { name: 'Buka tanpa musik' }).click()
-  await page.locator('#hadiah').scrollIntoViewIfNeeded()
-  await expect(page.getByRole('heading', { name: 'Tuhkan Cayang Pasti Bisa!' })).toBeVisible()
-  await expect(page.getByRole('img', { name: /Ayil dan Aya/ })).toHaveJSProperty('complete', true)
-})
-
-test('reduced motion keeps the story complete with a static finale', async ({ page }) => {
+test('every page can be opened directly (refresh-safe) and assets load', async ({ page }) => {
   const problems = watch(page)
-  await page.emulateMedia({ reducedMotion: 'reduce' })
-  await openWithoutMusic(page)
-  await expect(page.locator('html')).toHaveAttribute('data-motion', 'reduced')
-  await expect(page.getByRole('button', { name: /putar otomatis/i })).toHaveCount(0)
-  await page.locator('#bintang').scrollIntoViewIfNeeded()
-  await page.getByRole('button', { name: 'Buka tanpa kata rahasia' }).click()
-  await expect(page.getByRole('heading', { name: 'Happy Birthday Ayaa!' })).toBeVisible()
-  await expect(page.locator('#bintang canvas')).toHaveCount(0)
+  for (const [path, title] of [
+    ['./#/', 'Selamat Ulang Tahun, Aya!'],
+    ['./#/puzzle', 'Susun Puzzle-nya!'],
+    ['./#/kue', 'Tiup Lilinnya!'],
+    ['./#/galaksi', 'Kejutan Terakhir!'],
+  ]) {
+    await page.goto(path)
+    await expect(page).toHaveTitle(title)
+    await page.reload()
+    await expect(page.getByRole('dialog', { name: 'Selamat Datang!' })).toBeVisible()
+  }
   expect(problems).toEqual([])
 })
 
-test('no horizontal overflow at common widths', async ({ page }) => {
+test('reduced motion: everything still works, finale uses the static sky', async ({ page }) => {
+  const problems = watch(page)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await startWithoutMusic(page, './#/galaksi')
+  await expect(page.locator('html')).toHaveAttribute('data-motion', 'reduced')
+  await expect(page.getByText('Happy Birthday Ayaa!')).toBeVisible()
+  await expect(page.locator('canvas')).toHaveCount(0)
+  await page.getByRole('button', { name: /Kembali ke awal/ }).click()
+  await expect(page).toHaveURL(/#\/$/)
+  expect(problems).toEqual([])
+})
+
+test('no horizontal overflow on any page at common widths', async ({ page }) => {
   for (const width of [320, 360, 768, 1024, 1440]) {
-    await page.setViewportSize({ width, height: 860 })
-    await openWithoutMusic(page)
-    for (const id of ['pembuka', 'kenangan', 'surat', 'hadiah', 'kue', 'bintang']) {
-      await page.locator(`#${id}`).scrollIntoViewIfNeeded()
+    await page.setViewportSize({ width, height: 800 })
+    for (const path of ['./#/', './#/puzzle', './#/kue', './#/galaksi']) {
+      await startWithoutMusic(page, path)
       const overflow = await page.evaluate(() => Math.max(document.documentElement.scrollWidth - window.innerWidth, Math.abs(window.scrollX)))
-      expect(overflow, `${id} @ ${width}px`).toBeLessThanOrEqual(1)
+      expect(overflow, `${path} @ ${width}px`).toBeLessThanOrEqual(1)
     }
   }
 })

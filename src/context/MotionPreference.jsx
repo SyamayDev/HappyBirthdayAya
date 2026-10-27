@@ -1,19 +1,14 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from 'react'
 import { MotionConfig } from 'motion/react'
-import { readStorage, writeStorage } from '../lib/storage.js'
 
 /*
- * Reduced-motion preference = the OS setting, unless the visitor overrides
- * it with the in-app toggle ("Animasi hemat"). The result drives:
- *   • <MotionConfig reducedMotion> for every `motion` component,
- *   • <html data-motion="reduced|full"> for CSS (see globals.css),
- *   • `reduced` for JS-driven effects (confetti, autoplay, 3D intro, …).
+ * Follows the visitor's "reduce motion" system setting. The result drives
+ * <MotionConfig> for every `motion` component, <html data-motion> for CSS
+ * (see globals.css), and `reduced` for JS effects (confetti, 3D, page wipe).
+ * `initialPreference` ('system' | 'reduced' | 'full') is used by tests.
  */
 
-const STORAGE_KEY = 'motion-preference'
 const QUERY = '(prefers-reduced-motion: reduce)'
-const PREFERENCES = ['system', 'reduced', 'full']
-
 const MotionPreferenceContext = createContext(null)
 
 function subscribe(onChange) {
@@ -27,32 +22,15 @@ function getSystemReduced() {
   return typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia(QUERY).matches
 }
 
-export function MotionPreferenceProvider({ children, initialPreference }) {
+export function MotionPreferenceProvider({ children, initialPreference = 'system' }) {
   const systemReduced = useSyncExternalStore(subscribe, getSystemReduced, () => false)
-  const [preference, setPreferenceState] = useState(
-    () => initialPreference ?? readStorage(STORAGE_KEY, (v) => PREFERENCES.includes(v), 'system'),
-  )
-
-  const reduced = preference === 'system' ? systemReduced : preference === 'reduced'
+  const reduced = initialPreference === 'system' ? systemReduced : initialPreference === 'reduced'
 
   useEffect(() => {
     document.documentElement.dataset.motion = reduced ? 'reduced' : 'full'
   }, [reduced])
 
-  const setPreference = useCallback((next) => {
-    if (!PREFERENCES.includes(next)) return
-    setPreferenceState(next)
-    writeStorage(STORAGE_KEY, next)
-  }, [])
-
-  const toggleReduced = useCallback(() => {
-    setPreference(reduced ? 'full' : 'reduced')
-  }, [reduced, setPreference])
-
-  const value = useMemo(
-    () => ({ reduced, preference, systemReduced, setPreference, toggleReduced }),
-    [reduced, preference, systemReduced, setPreference, toggleReduced],
-  )
+  const value = useMemo(() => ({ reduced }), [reduced])
 
   return (
     <MotionPreferenceContext.Provider value={value}>
@@ -61,13 +39,8 @@ export function MotionPreferenceProvider({ children, initialPreference }) {
   )
 }
 
-export function useMotionPreference() {
-  const context = useContext(MotionPreferenceContext)
-  if (!context) throw new Error('useMotionPreference must be used inside <MotionPreferenceProvider>')
-  return context
-}
-
-/** Shorthand: true when non-essential motion should be skipped. */
 export function useReducedMotionPreference() {
-  return useMotionPreference().reduced
+  const context = useContext(MotionPreferenceContext)
+  if (!context) throw new Error('useReducedMotionPreference must be used inside <MotionPreferenceProvider>')
+  return context.reduced
 }

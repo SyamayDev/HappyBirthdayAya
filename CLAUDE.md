@@ -517,39 +517,45 @@ Start by inspecting the actual repository state and full asset tree. Then rebuil
 
 ## 18. Current implementation — read this before changing anything
 
-> This section was written after the React rebuild was completed and verified (October 2026). Sections 1–17 above remain the product specification; this section describes the code that actually exists. Keep it accurate when you change the project.
+> Written after the rebuild was completed and verified (October 2026). Sections 1–17 are the product brief; this section describes the code that exists. Keep it accurate when you change the project.
+
+### Owner decision that overrides parts of sections 3–4
+
+The owner rejected a first rebuild that turned the site into one long scrolling page with chapters: **"keep the original concept (the legacy site), just make it all blue and better"**. So the app deliberately keeps the legacy structure and look:
+
+- four pages with their own URL — `#/` home (rotating 3D photo ring seen from inside + the tilted book with the letter), `#/puzzle` (blue intro card → real knobbed jigsaw → envelope + confetti → "Tuhkan Cayang Pasti Bisa!"), `#/kue` (CSS cake like the original, tap to place candles, blow via microphone, secret phrase), `#/galaksi` (full-screen three.js galaxy, tap the planet to start);
+- the legacy "Selamat Datang!" card (now without the microphone request), vivid blue gradient pages with orbiting hearts, Amatic SC / Indie Flower fonts, white-blue cards with a bright border and a heart on top.
+Do not "modernise" this into a different concept. Improvements must stay within it.
 
 ### Commands (exactly as in `package.json`)
 
 | Command | Purpose |
 | --- | --- |
-| `npm run dev` | Vite dev server (http://localhost:5173) |
+| `npm run dev` | Vite dev server (http://localhost:5173, pages at `#/puzzle`, `#/kue`, `#/galaksi`) |
 | `npm run build` / `npm run preview` | Production build to `dist/` / serve it |
 | `npm run lint` | ESLint flat config (`legacy/`, `dist/`, `docs/` ignored) |
 | `npm test` / `npm run test:watch` | Vitest + Testing Library (jsdom) |
-| `npm run test:e2e` | Playwright against `build` + `preview` (mobile 390 px + desktop 1440 px); uses installed Chrome if found, else `npx playwright install chromium` |
-| `npm run shots` | Screenshots + quick browser QA (console errors, failed requests, broken images, horizontal overflow); needs `npm run dev` running. `--harness=<chapter>` / `--click="Name A;Name B"` / `--reduced` / `--widths=…` |
+| `npm run test:e2e` | Playwright against `build` + `preview` (390 px + 1440 px); installed Chrome if found, else `npx playwright install chromium` |
+| `npm run shots` | Screenshots of every page/state into `docs/screenshots` + QA (console errors, broken images, overflow); needs `npm run dev` |
 | `npm run check` | lint → test → build |
 
-Last verified: lint clean · 72 unit tests (11 files) · 10 Playwright tests · build OK. Node `^20.19.0 || >=22.12.0`, npm (only `package-lock.json`).
+Last verified: lint clean · 32 unit tests (6 files) · 10 Playwright tests · build OK. Node `^20.19.0 || >=22.12.0`, npm only.
 
 ### Architecture
 
-- `src/data/content.js` is the **single source of truth** for all copy, photos, audio and config. Strings marked `// verbatim` come from the legacy site and must not be paraphrased. Known owner decision pending: `letter.greeting` reads "Hai Sayaang Ayil," (sender's own name), kept verbatim on purpose.
-- `src/App.jsx` composes chapters in order: `OpeningGate` (overlay) → `Hero#pembuka` → `MemoryCarousel#kenangan` → `LetterBook#surat` → `PhotoPuzzle#hadiah` → `BirthdayCake#kue` → `GalaxyFinale#bintang`, plus `SkyBackdrop`, `Dock`, `SparkleTrail`. Chapters take no props. Each chapter is wrapped in an `ErrorBoundary`; puzzle/cake/finale are keyed by `resetCount` so "Putar ulang dari awal" remounts them.
-- Context (`src/context/`, all bundled in `AppProviders`): `Journey` (started flag + persisted milestones `puzzleSolved/candlesOut/finaleUnlocked` + `STORAGE_KEYS`), `Music` (renders the single `<audio>`; status `idle|loading|playing|paused|blocked|unavailable`), `MotionPreference` (system setting + "Animasi hemat" override → `<MotionConfig>` and `<html data-motion>`), `Announcer` (one polite live region).
-- `src/lib/`: `navigation.goToChapter(id)` (pushes `#hash`, scrolls, focuses `[data-chapter-heading]`), `storage` (guarded + validated `localStorage`, prefix `aya:`), `celebrate` (canvas-confetti, no-op under reduced motion), `random.createRng` (seeded RNG for pure decorative layouts), `motion` tokens.
-- Styling: CSS Modules + tokens in `src/styles/tokens.css`; shared classes (`.btn`, `.btn--primary|ghost|sm|lg|icon|night`, `.eyebrow`, `.text-gradient`, `.visually-hidden`, `.container`) in `globals.css`. **Keyframes must be defined inside each module** (CSS Modules localize animation names). Never use pink/magenta.
-- The finale's three.js scene (`GalaxyScene.js`) is dynamically imported only after unlock and when near the viewport; it creates its own `<canvas>` (StrictMode-safe) and disposes everything. Static CSS fallback: `StaticSky.jsx` (no WebGL, context loss, or reduced motion).
-- Dev-only harness: `/?harness=kenangan` (also `gate&started=0`, `bintang&progress=finaleUnlocked`, `hero,kenangan,dock`, `&motion=reduced`). Removed from production builds.
+- `src/data/content.js` — single source of truth for all copy, photos, audio and config. Strings marked `// verbatim` come from the legacy site; never paraphrase them. Pending owner decision: `letter.greeting` reads "Hai Sayaang Ayil," (sender's own name), kept verbatim on purpose.
+- `src/App.jsx` picks the page from the hash (`src/lib/router.js`, `useSyncExternalStore` on `hashchange`). `HeartsBackground` variant per page; `MusicButton`, `HeartTrail` and `WelcomeModal` are global.
+- Context (`AppProviders`): `MotionPreference` (system reduce-motion → `<MotionConfig>` + `<html data-motion>`), `Announcer` (live region), `Music` (the only `<audio>`; statuses idle|loading|playing|paused|blocked|unavailable), `Journey` (`started` = welcome card tapped), `Transition` (`navigate(route, event)` = heart→circle morph wipe, instant under reduced motion).
+- `components/Modal` wraps a native `<dialog>` (always render inside `<AnimatePresence>`); while exiting it calls `close()` + `show()` so the page is not inert during the exit animation. `MorphIcon` morphs HEART ↔ SPARKLE (`lib/morphShapes.js`, generated paths with identical structure — regenerate rather than hand-edit).
+- Pages: `pages/Home` (`PhotoRing`, `Book`), `pages/Puzzle` (`jigsaw.js` pure geometry, `Jigsaw` with imperative `scatter()`/`help()` handle, `Envelope` timeline via `useAnimate`), `pages/Cake` (`Cake`, `candles.js`, `useBlowDetector`, `useSpeechSecret`), `pages/Galaxy` (`GalaxyScene.js` dynamically imported; `StaticSky` fallback for no WebGL / reduced motion).
 
-### Conventions and pitfalls learned during the rebuild
+### Conventions and pitfalls learned
 
-- ESLint runs the React Compiler rules (`react-hooks` v7): no `Math.random()`/`Date.now()` in render (use `createRng`), no reading `ref.current` during render, no synchronous `setState` in effect bodies (do side effects in event handlers), never mutate props/hook args.
-- `motion` components keep the **first** callback ref they receive; don't build slot→element maps with changing ref callbacks (the puzzle uses `board.children[slot]`). Use `useIsPresent()` for exit-only styles; don't put `pointerEvents` in exit variants. Use `useAnimate` for repeatable feedback (keying a wrapper remounts its inputs and loses focus).
-- Chapters use `overflow-x: clip` so decorative glows can't widen the page (focus/scroll would otherwise shift the page sideways).
-- jsdom stand-ins live in `src/test/setup.js` (matchMedia, IntersectionObserver with `instances`, ResizeObserver, `<dialog>`, media play/pause, canvas → null, canvas-confetti mocked). Escape on `<dialog>` is not emulated: dispatch a `cancel` event. Render with `renderWithProviders(ui, { started, progress, motion })`.
-- Music must be started synchronously inside a click handler (`OpeningGate` calls `play()` before `start()`). Microphone access exists **only** in the optional cake blow mode (`useBlowDetector`), requested on its own button, always released.
-- `backsound.mp3` in `legacy/` is AAC-in-MP4 (DASH) with a wrong extension; the app ships a lossless `.m4a` remux plus a real `.mp3` fallback.
-- Deployment: `vite.config.js` uses `base: './'`. `vercel.json` forces the Vite preset (the Vercel project predates the build step). GitHub Pages needs Settings → Pages → Source: GitHub Actions (`.github/workflows/deploy-pages.yml`). OG tags point to `https://happy-birthday-aya-lovat.vercel.app/`.
-- `legacy/` holds the original static site (moved with `git mv`, history intact). It is not built or linted; it can be deleted once the owner no longer needs it.
+- React Compiler lint rules are on: no `Math.random()`/`Date.now()` during render, no `ref.current` reads in render, no synchronous `setState` inside effect bodies (use event handlers or imperative handles), never mutate props.
+- `motion` components keep the first callback ref they receive; `onAnimationComplete` on mount animations proved unreliable — use `useAnimate` with awaited steps for sequences. Don't put `pointerEvents` in exit variants (use `useIsPresent`).
+- CSS Modules localise keyframe names: define keyframes inside each module. 3D containers with `preserve-3d` (the photo ring) need `pointer-events: none` so their flat box doesn't swallow clicks meant for children pushed back in Z.
+- Elements with infinite animations (pulsing start button, floating book) never become "stable" for Playwright: tests use `force: true` or keyboard paths. A hash-only `page.goto` is not a new visit (no welcome card) — reload.
+- The cake asks for the microphone only after "Siap, Mulai" (its instructions explain it); music never touches the microphone. Speech recognition is opt-in via the "Ucapkan" button.
+- jsdom stand-ins live in `src/test/setup.js` (matchMedia, IntersectionObserver with `instances`, ResizeObserver, `<dialog>`, media play/pause, canvas → null, canvas-confetti mocked). Jigsaw tests stub `clientWidth/clientHeight`. Render with `renderWithProviders(ui, { started, motion })`.
+- Deployment: `base: './'`; `vercel.json` forces the Vite preset (the Vercel project predates the build step); GitHub Pages needs Settings → Pages → Source: GitHub Actions. OG tags point to `https://happy-birthday-aya-lovat.vercel.app/`.
+- `legacy/` is the original static site (moved with `git mv`, history intact): the visual/behavioural reference for any future change. Not built or linted.

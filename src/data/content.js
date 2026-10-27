@@ -1,5 +1,7 @@
 /*
- * All personal copy, photos and configuration for Aya's birthday experience.
+ * All personal copy, photos and configuration for Aya's birthday website.
+ * The structure follows the original site: home (photo ring + book) →
+ * puzzle → cake → galaxy.
  *
  * Text marked "verbatim" was carried over word-for-word from the original
  * static site (now in /legacy). The only intentional edits: pink heart emoji
@@ -55,42 +57,29 @@ export const meta = {
   legacyTitle: 'Selamat Ulang Tahun, Aya!', // verbatim (legacy <title>)
 }
 
-/* ── Chapters (navigation + section headings) ──────────────── */
-export const chapters = [
-  { id: 'pembuka', number: 0, label: 'Pembuka' },
-  { id: 'kenangan', number: 1, label: 'Kenangan' },
-  { id: 'surat', number: 2, label: 'Surat' },
-  { id: 'hadiah', number: 3, label: 'Puzzle' },
-  { id: 'kue', number: 4, label: 'Kue' },
-  { id: 'bintang', number: 5, label: 'Bintang' },
-]
+/* ── Pages (same order as the original site) ───────────────── */
+export const routes = ['beranda', 'puzzle', 'kue', 'galaksi']
 
-/* ── Opening gate ──────────────────────────────────────────── */
-export const gate = {
-  greeting: 'Selamat Datang!', // verbatim (legacy welcome modal title)
-  to: 'Untuk Aya',
-  description: 'Ada kado kecil yang menunggu di balik amplop ini.',
-  openWithMusic: 'Buka kejutan',
-  openWithoutMusic: 'Buka tanpa musik',
-  musicNote: 'Musik diputar setelah kamu menekan tombol, tanpa izin mikrofon.',
+export const pageTitles = {
+  beranda: 'Selamat Ulang Tahun, Aya!', // verbatim (legacy index.html <title>)
+  puzzle: 'Susun Puzzle-nya!', // verbatim (legacy puzzle <title>)
+  kue: 'Tiup Lilinnya!', // verbatim (legacy cake <title>)
+  galaksi: 'Kejutan Terakhir!', // verbatim (legacy galaxy <title>)
 }
 
-/* ── Hero ──────────────────────────────────────────────────── */
-export const hero = {
-  eyebrow: birthday.displayDate,
-  titleLine: 'Selamat Ulang Tahun',
-  name: 'Aya',
-  ageBadge: 'ke-18',
-  greetingVerbatim: 'Happy Birthday Ayaa!', // verbatim (legacy galaxy hint text)
-  lead: 'Sebuah kado kecil dari Ayil: kenangan, surat, puzzle, kue, dan langit penuh bintang.',
-  cta: 'Mulai perjalanan',
+/* ── Welcome card (was the microphone permission modal) ────── */
+export const welcome = {
+  title: 'Selamat Datang!', // verbatim
+  // The original asked for microphone + audio access; music needs neither.
+  description: 'Untuk pengalaman terbaik, nyalakan musiknya ya.',
+  start: 'Mulai',
+  startWithoutMusic: 'Mulai tanpa musik',
 }
 
-/* ── Memories (photo ring) ─────────────────────────────────── */
-export const memories = {
-  eyebrow: 'Kenangan',
-  title: 'Galeri Kenangan',
-  lead: 'Sepuluh potret Aya. Geser, ketuk, atau pakai tombol panah untuk melihat satu per satu.',
+/* ── Home: photo ring + book ──────────────────────────────── */
+export const home = {
+  ringLabel: 'Foto-foto Aya',
+  bookHint: 'Ketuk bukunya ✨',
 }
 
 /**
@@ -113,9 +102,6 @@ export const photos = [
 
 /* ── Letter (book) ─────────────────────────────────────────── */
 export const letter = {
-  eyebrow: 'Surat',
-  sectionTitle: 'Surat untuk Aya',
-  lead: 'Buka bukunya pelan-pelan, ada surat di dalamnya.',
   cover: {
     src: bookCover,
     width: 720,
@@ -133,13 +119,12 @@ export const letter = {
     'Selamat ulang tahun yaa. Semoga di umur yang baru ini, ayaaa selalu diberikan kebahagiaan, kesehatan, dan semua yang ayaaa cita-citakan bisa tercapai.', // verbatim
     'Ayill punya sesuatu buat ayaa-nya. Klik tombol di bawah yaa!', // verbatim
   ],
-  cta: 'Buka!', // verbatim — now leads to the puzzle chapter
+  cta: 'Buka!', // verbatim — leads to the puzzle page
   signOff: 'Dari Ayil', // verbatim
 }
 
 /* ── Puzzle ────────────────────────────────────────────────── */
 export const puzzle = {
-  eyebrow: 'Puzzle',
   title: 'Susun Puzzle-nya!', // verbatim (legacy page title)
   image: {
     src: puzzlePhoto,
@@ -159,58 +144,53 @@ export const puzzle = {
     envelopeNote: 'Selamat cayaang berhasil selesaikan puzzlenya yah, ini aril punya hadiah buat ayaa.', // verbatim (orphaned envelope-modal page)
     title: 'Tuhkan Cayang Pasti Bisa!', // verbatim
     description: 'Dengan komunikasi dan sabar pasti masalah bisa teratasi. Terimakasih telah berjuang sejauh ini, di bawah ini hadiah aya. Silahkan klik tombol di bawah untuk melihat hadiahnya! 💙', // verbatim (💝 → 💙)
-    cta: 'Buka Hadiah Aya', // verbatim — now leads to the cake chapter
+    cta: 'Buka Hadiah Aya', // verbatim — leads to the cake page
   },
-  difficulties: [
-    { id: 'mudah', label: 'Mudah', cols: 3, rows: 4 },
-    { id: 'seru', label: 'Seru', cols: 4, rows: 5 },
-  ],
+  // The original generated ~12 irregular pieces; 3 × 4 keeps that count.
+  cols: 3,
+  rows: 4,
 }
 
 /* ── Cake ──────────────────────────────────────────────────── */
 export const cake = {
-  eyebrow: 'Kue',
   title: 'Tiup Lilinnya!', // verbatim (legacy page title)
   instructions: {
     heading: 'Hai Cayaang! 🎂', // verbatim
     steps: [
+      'Silakan berada di ruangan hening.', // verbatim
       'Ketuk kue untuk meletakkan lilin.', // verbatim
-      'Buat permohonan, lalu tiup lilinnya: ketuk apinya, tekan tombol tiup, atau tiup sungguhan lewat mikrofon (opsional).', // adapted from "Tiup kue tersebut (gunakan mikrofon)."
-      'Ucapkan "ayil sayang aya" untuk kejutan.', // verbatim — typed at the final surprise
+      'Tiup kue tersebut (gunakan mikrofon).', // verbatim
     ],
-    micTip: 'Silakan berada di ruangan hening.', // verbatim — shown for microphone mode
+    secretStep: { before: 'Ucapkan ', phrase: '"ayil sayang aya"', after: ' untuk kejutan.' }, // verbatim
     start: 'Siap, Mulai', // verbatim
   },
   guidance: {
     place: 'Klik di atas kue untuk menaruh lilin', // verbatim
-    blow: 'Tiup lilinnya dengan meniup ke mikrofon', // verbatim — microphone mode hint
+    blow: 'Tiup lilinnya dengan meniup ke mikrofon', // verbatim
     secret: 'Ucapkan kata rahasia untuk kejutan!', // verbatim
   },
   counterLabel: 'Lilin di atas kue:', // verbatim
-  maxCandles: birthday.age,
+  maxCandles: 18,
   help: {
     title: 'Bantuan', // verbatim
     text: 'Tidak bisa beralih halaman? Tekan tombol di bawah ini.', // verbatim
-    cta: 'Buka Halaman Selanjutnya', // verbatim — now scrolls to the final surprise
+    cta: 'Buka Halaman Selanjutnya', // verbatim
   },
 }
 
-/* ── Finale ────────────────────────────────────────────────── */
+/* ── Galaxy (final surprise) ─────────────────────────────── */
 export const finale = {
-  eyebrow: 'Bintang',
   title: 'Kejutan Terakhir!', // verbatim (legacy page title)
   secret: {
-    prompt: 'Ucapkan kata rahasia untuk kejutan!', // verbatim
     hint: 'ayil sayang aya', // verbatim phrase from the cake instructions
     // Legacy rule: any phrase containing "sayang" unlocks the surprise.
     keyword: 'sayang',
   },
   planetGreeting: 'Happy Birthday Ayaa!', // verbatim
   rings: ['♡Happy Birthday Sayang♡', 'I love you', 'Always & Forever', '18/05/2026'], // verbatim
-  couple: people.couple,
-  closing: {
-    signOff: 'Dari Ayil', // verbatim (letter sign-off)
-  },
+  couple: people.couple, // verbatim "Aya & Ayil"
+  tapHint: 'Sentuh planetnya',
+  signOff: 'Dari Ayil', // verbatim (letter sign-off)
 }
 
 /* ── Music ─────────────────────────────────────────────────── */

@@ -1,69 +1,57 @@
 import { useEffect } from 'react'
-import { chapters } from './data/content.js'
-import { useJourney } from './context/Journey.jsx'
-import { chapterFromHash } from './lib/navigation.js'
+import { AnimatePresence, motion } from 'motion/react'
+import { pageTitles } from './data/content.js'
+import { useRoute } from './lib/router.js'
 import { ErrorBoundary } from './components/common/ErrorBoundary.jsx'
-import { SkyBackdrop } from './components/SkyBackdrop/SkyBackdrop.jsx'
-import { OpeningGate } from './components/OpeningGate/OpeningGate.jsx'
-import { Hero } from './components/Hero/Hero.jsx'
-import { MemoryCarousel } from './components/MemoryCarousel/MemoryCarousel.jsx'
-import { LetterBook } from './components/LetterBook/LetterBook.jsx'
-import { PhotoPuzzle } from './components/PhotoPuzzle/PhotoPuzzle.jsx'
-import { BirthdayCake } from './components/BirthdayCake/BirthdayCake.jsx'
-import { GalaxyFinale } from './components/GalaxyFinale/GalaxyFinale.jsx'
-import { Dock } from './components/Dock/Dock.jsx'
-import { SparkleTrail } from './components/SparkleTrail/SparkleTrail.jsx'
+import { HeartsBackground } from './components/HeartsBackground/HeartsBackground.jsx'
+import { HeartTrail } from './components/HeartTrail/HeartTrail.jsx'
+import { MusicButton } from './components/MusicButton/MusicButton.jsx'
+import { WelcomeModal } from './components/WelcomeModal/WelcomeModal.jsx'
+import { HomePage } from './pages/Home/HomePage.jsx'
+import { PuzzlePage } from './pages/Puzzle/PuzzlePage.jsx'
+import { CakePage } from './pages/Cake/CakePage.jsx'
+import { GalaxyPage } from './pages/Galaxy/GalaxyPage.jsx'
 
-const CHAPTER_IDS = chapters.map((chapter) => chapter.id)
+/*
+ * Same journey as the original four HTML pages:
+ *   #/        home   — photo ring + book with the letter
+ *   #/puzzle  puzzle — jigsaw of Ayil & Aya
+ *   #/kue     cake   — candles, blow, secret word
+ *   #/galaksi galaxy — the final surprise
+ */
+const PAGES = { beranda: HomePage, puzzle: PuzzlePage, kue: CakePage, galaksi: GalaxyPage }
+const BACKGROUNDS = { beranda: 'home', puzzle: 'puzzle', kue: 'cake' }
 
 export default function App() {
-  const { started, resetCount } = useJourney()
+  const route = useRoute()
+  const Page = PAGES[route]
 
-  // After the gate opens: honour a #chapter in the URL, then move focus to
-  // that chapter's heading so keyboard and screen-reader users land inside.
   useEffect(() => {
-    if (!started) return undefined
-    const frame = requestAnimationFrame(() => {
-      const id = chapterFromHash(CHAPTER_IDS)
-      const section = document.getElementById(id ?? CHAPTER_IDS[0])
-      if (!section) return
-      if (id) section.scrollIntoView({ block: 'start' })
-      section.querySelector('[data-chapter-heading]')?.focus({ preventScroll: true })
-    })
-    return () => cancelAnimationFrame(frame)
-  }, [started])
+    document.title = pageTitles[route]
+    window.scrollTo(0, 0)
+  }, [route])
 
   return (
     <>
-      <SkyBackdrop />
-      <OpeningGate />
-
-      <div inert={!started}>
-        <a className="skip-link" href="#kenangan">
-          Langsung ke galeri kenangan
-        </a>
-        <main id="main">
-          <Hero />
-          <ErrorBoundary label="Galeri kenangan">
-            <MemoryCarousel />
+      {BACKGROUNDS[route] ? <HeartsBackground variant={BACKGROUNDS[route]} /> : null}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.main
+          key={route}
+          id="main"
+          className="page"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          <ErrorBoundary label="Halaman ini">
+            <Page />
           </ErrorBoundary>
-          <ErrorBoundary label="Surat">
-            <LetterBook />
-          </ErrorBoundary>
-          <ErrorBoundary label="Puzzle">
-            <PhotoPuzzle key={`puzzle-${resetCount}`} />
-          </ErrorBoundary>
-          <ErrorBoundary label="Kue ulang tahun">
-            <BirthdayCake key={`cake-${resetCount}`} />
-          </ErrorBoundary>
-          <ErrorBoundary label="Kejutan terakhir">
-            <GalaxyFinale key={`finale-${resetCount}`} />
-          </ErrorBoundary>
-        </main>
-      </div>
-
-      {started ? <Dock /> : null}
-      <SparkleTrail />
+        </motion.main>
+      </AnimatePresence>
+      <MusicButton />
+      <HeartTrail />
+      <WelcomeModal />
     </>
   )
 }

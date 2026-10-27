@@ -1,0 +1,30 @@
+.title {
+  font-family: var(--font-title);
+  font-size: clamp(2.4rem, 2rem + 2vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  color: var(--card-title);
+}
+
+.text {
+  max-width: 24rem;
+  font-size: 1.08rem;
+  color: var(--card-text);
+}
+
+.start {
+  margin-top: 10px;
+  padding-inline: 2.2em;
+  animation: welcome-pulse 2s ease-in-out infinite;
+}
+
+@keyframes welcome-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}

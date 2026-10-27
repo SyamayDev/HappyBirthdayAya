@@ -1,0 +1,77 @@
+.wrap {
+  width: 100%;
+}
+
+/* Same composition as the original .scene: wide, faded at both sides. */
+.scene {
+  --w: clamp(130px, 33vw, 15em);
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 980px;
+  height: clamp(250px, 40vh, 420px);
+  margin: 0 auto;
+  perspective: 35em;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  mask: linear-gradient(90deg, transparent, #000 18% 82%, transparent);
+  -webkit-mask: linear-gradient(90deg, transparent, #000 18% 82%, transparent);
+  cursor: grab;
+}
+
+.scene:active {
+  cursor: grabbing;
+}
+
+.ring {
+  --ba: calc(1turn / var(--n));
+  display: grid;
+  place-self: center;
+  transform-style: preserve-3d;
+  /* the ring's own flat box sits in front of the (pushed-back) photos */
+  pointer-events: none;
+}
+
+.card {
+  grid-area: 1 / 1;
+  pointer-events: auto;
+  width: var(--w);
+  aspect-ratio: 7 / 10;
+  padding: 0;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.92);
+  border-radius: 1.5em;
+  background: #cfe7ff;
+  box-shadow: 0 10px 30px rgba(16, 48, 106, 0.35), 0 0 0 1px rgba(47, 127, 232, 0.25);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transform: rotateY(calc(var(--i) * var(--ba))) translateZ(calc(-1 * (0.5 * var(--w) + 0.5em) / tan(0.5 * var(--ba))));
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.55), 0 0 40px rgba(143, 208, 255, 0.9);
+}
+
+.card:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .scene {
+    height: clamp(210px, 32vh, 300px);
+    perspective: 28em;
+  }
+}

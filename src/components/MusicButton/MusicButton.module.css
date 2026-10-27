@@ -1,0 +1,101 @@
+.button {
+  position: fixed;
+  left: max(14px, env(safe-area-inset-left));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: var(--z-floating);
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(16, 48, 106, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s var(--ease-spring), background 0.3s;
+}
+
+.button:hover {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.button svg {
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 1px 2px rgba(16, 48, 106, 0.4));
+}
+
+.playing {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--blue-600);
+}
+
+.slash {
+  position: absolute;
+  width: 26px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: #ffffff;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 0 1.5px rgba(33, 97, 196, 0.6);
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  width: 20px;
+  height: 18px;
+}
+
+.bars span {
+  flex: 1;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--btn-bg);
+  transform-origin: 50% 100%;
+  animation: music-bar 0.9s ease-in-out infinite;
+}
+
+.bars span:nth-child(2) {
+  animation-delay: -0.35s;
+}
+
+.bars span:nth-child(3) {
+  animation-delay: -0.65s;
+}
+
+.bars span:nth-child(4) {
+  animation-delay: -0.15s;
+}
+
+@keyframes music-bar {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.spin {
+  animation: music-spin 0.9s linear infinite;
+}
+
+@keyframes music-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media print {
+  .button {
+    display: none;
+  }
+}
